@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "LLL",
+    "SCS",
+    "WWW"
+  ],
+  "key": {
+    "C": { "item": "minecraft:chest" },
+    "L": { "item": "minecraft:stripped_spruce_log" },
+    "S": { "item": "minecraft:white_wool" },
+    "W": { "item": "trotting_wagons:wheel" }
+  },
+  "result": { "item": "trotting_wagons:royal_wagon" }
+}

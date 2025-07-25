@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "PCP",
+    "WWW"
+  ],
+  "key": {
+    "P": { "item": "minecraft:spruce_planks" },
+    "C": { "item": "minecraft:chest" },
+    "S": { "item": "minecraft:white_wool" },
+    "W": { "item": "trotting_wagons:wheel" }
+  },
+  "result": { "item": "trotting_wagons:conestoga_wagon" }
+}

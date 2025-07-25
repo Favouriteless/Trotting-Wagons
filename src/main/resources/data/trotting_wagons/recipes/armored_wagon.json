@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "LIL",
+    "WWW"
+  ],
+  "key": {
+    "P": { "item": "minecraft:spruce_planks" },
+    "I": { "item": "minecraft:iron_block" },
+    "L": { "item": "minecraft:stripped_spruce_log" },
+    "W": { "item": "trotting_wagons:wheel" }
+  },
+  "result": { "item": "trotting_wagons:armored_wagon" }
+}

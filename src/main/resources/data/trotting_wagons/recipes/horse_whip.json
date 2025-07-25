@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "  S",
+    " SL",
+    "S L"
+  ],
+  "key": {
+    "S": { "item": "minecraft:stick" },
+    "L": { "item": "minecraft:lead" }
+  },
+  "result": { "item": "trotting_wagons:horse_whip" }
+}
