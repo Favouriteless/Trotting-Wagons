@@ -12,5 +12,5 @@
     "S": { "item": "minecraft:white_wool" },
     "W": { "item": "trotting_wagons:wheel" }
   },
-  "result": { "item": "trotting_wagons:royal_wagon" }
+  "result": { "item": "trotting_wagons:royal_wagon", "nbt": { "color": 0 } }
 }
