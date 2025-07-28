@@ -188,7 +188,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
             Vec3 rightDisplace = collideSteering(Side.RIGHT, steer);
 
             // If either horse is going to hit a block by steering, don't allow it.
-            if(!leftDisplace.equals(Vec3.ZERO) && !rightDisplace.equals(Vec3.ZERO)) {
+             if(!leftDisplace.equals(Vec3.ZERO) && !rightDisplace.equals(Vec3.ZERO)) {
                 setYRot(Mth.wrapDegrees(getYRot() + steer));
 
                 float yRot = getYRot();
@@ -225,7 +225,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
             return Vec3.ZERO;
 
         Vec3 desired = rotateY(new Vec3(side == Side.LEFT ? -horseX : horseX, 0, horseY), getYRot() + angle); // Local post-rotation position
-        Vec3 local = horse.position().subtract(position()); // Local starting position
+        Vec3 local = horse.position().subtract(position()).multiply(1, 0, 1); // Local starting position.
 
         Vec3 displacement = desired.subtract(local);
         Vec3 collidedDisplacement = horse.collide(displacement);
@@ -278,6 +278,14 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
                 return InteractionResult.sidedSuccess(isClientSide);
             }
 
+            if(TrottingWagons.DYE_ITEMS.containsKey(item)) {
+                setColor(TrottingWagons.DYE_ITEMS.get(item));
+                return InteractionResult.sidedSuccess(isClientSide);
+            }
+
+            if(tryHitchHorse(player) || tryMountMob(player))
+                return InteractionResult.sidedSuccess(isClientSide);
+
             if(stack.is(Items.LEAD)) {
                 if(isClientSide)
                     return InteractionResult.SUCCESS;
@@ -293,14 +301,6 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
                 }
                 return InteractionResult.CONSUME;
             }
-
-            if(TrottingWagons.DYE_ITEMS.containsKey(item)) {
-                setColor(TrottingWagons.DYE_ITEMS.get(item));
-                return InteractionResult.sidedSuccess(isClientSide);
-            }
-
-            if(tryHitchHorse(player) || tryMountMob(player))
-                return InteractionResult.sidedSuccess(isClientSide);
         }
         else if(player.getVehicle() != this) {
             if(!isClientSide) {
