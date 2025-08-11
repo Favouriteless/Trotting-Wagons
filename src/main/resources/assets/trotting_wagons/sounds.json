@@ -3,5 +3,10 @@
     "sounds": [
       "trotting_wagons:wagon"
     ]
+  },
+  "whip": {
+    "sounds": [
+      "trotting_wagons:whip"
+    ]
   }
 }

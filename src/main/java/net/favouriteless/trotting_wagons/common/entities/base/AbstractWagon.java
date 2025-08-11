@@ -22,7 +22,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -63,7 +62,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
     private int speedLevel = 0;
     private double currentSpeed;
 
-    private final Horse[] horses = new Horse[2];
+    private final Mob[] horses = new Mob[2];
     private final UUID[] horseUuids = new UUID[2];
 
     public AbstractWagon(EntityType<? extends AbstractWagon> type, Level level, double wheelWidth, double wheelLength, Vec3[] riders,
@@ -93,7 +92,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
 
     private void validateHorses() {
         if(firstTick || level().getGameTime() % 100 == 0) { // Repeated checks help resolve chunk loading issues.
-            Horse horse = tryGetHorse(Side.LEFT);
+            Mob horse = tryGetHorse(Side.LEFT);
             if(horse != null)
                 setHorse(horse, Side.LEFT);
 
@@ -108,14 +107,14 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
             setHorse(null, Side.RIGHT);
     }
 
-    private Horse tryGetHorse(Side side) {
-        final Horse horse = getHorse(side);
+    private Mob tryGetHorse(Side side) {
+        final Mob horse = getHorse(side);
         final UUID uuid = getHorseUUID(side);
 
         if(uuid == null || horse != null)
             return null;
 
-        return level().getEntitiesOfClass(Horse.class, getBoundingBox().inflate(5))
+        return level().getEntitiesOfClass(Mob.class, getBoundingBox().inflate(5))
                 .stream()
                 .filter(h -> h.getUUID().equals(uuid))
                 .findFirst()
@@ -123,7 +122,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
     }
 
     private boolean isHorseInRange(Side side) {
-        final Horse horse = getHorse(side);
+        final Mob horse = getHorse(side);
         if(horse == null)
             return false;
 
@@ -133,8 +132,8 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
 
     @Override
     public void moveTick() {
-        final Horse leftHorse = getHorse(Side.LEFT);
-        final Horse rightHorse = getHorse(Side.RIGHT);
+        final Mob leftHorse = getHorse(Side.LEFT);
+        final Mob rightHorse = getHorse(Side.RIGHT);
 
         if(!isVehicle() || !(this.getControllingPassenger() instanceof Player) || leftHorse == null || rightHorse == null) {
             speedLevel = 0;
@@ -181,8 +180,8 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         float steer = -getSteeringImpulse() * speedPercent * turnRate;
 
         if(steer != 0) {
-            final Horse leftHorse = getHorse(Side.LEFT);
-            final Horse rightHorse = getHorse(Side.RIGHT);
+            final Mob leftHorse = getHorse(Side.LEFT);
+            final Mob rightHorse = getHorse(Side.RIGHT);
 
             Vec3 leftDisplace = collideSteering(Side.LEFT, steer);
             Vec3 rightDisplace = collideSteering(Side.RIGHT, steer);
@@ -210,7 +209,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         currentSpeed += Mth.sign(speedDiff) * Math.min(Math.abs(accel), Math.abs(speedDiff));
     }
 
-    private void setHorsePos(Horse horse, Vec3 pos, float rot) {
+    private void setHorsePos(Mob horse, Vec3 pos, float rot) {
         if(horse == null)
             return;
         horse.setYRot(rot);
@@ -220,7 +219,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
     }
 
     private Vec3 collideSteering(Side side, float angle) {
-        Horse horse = getHorse(side);
+        Mob horse = getHorse(side);
         if(horse == null)
             return Vec3.ZERO;
 
@@ -315,10 +314,10 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
     }
 
     private boolean tryHitchHorse(Player player) {
-        Horse horse = level().getEntitiesOfClass(Horse.class, new AABB(
+        Mob horse = level().getEntitiesOfClass(Mob.class, new AABB(
                 player.getX()-7, player.getY()-7, player.getZ()-7,
                 player.getX()+7, player.getY()+7, player.getZ()+7
-        ), h -> h.getLeashHolder() == player).stream()
+        ), h -> h.getLeashHolder() == player && ServerConfig.INSTANCE.allowedEntities.get().contains(h.getType().builtInRegistryHolder().key().location().toString())).stream()
                 .findFirst().orElse(null);
 
         if(!level().isClientSide && horse != null) {
@@ -345,12 +344,12 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         return mob != null;
     }
 
-    private void hitchHorse(Horse horse, Side side) {
+    private void hitchHorse(Mob horse, Side side) {
         setHorse(horse, side);
         initHorse(horse, side);
     }
 
-    private void initHorse(Horse horse, Side side) {
+    private void initHorse(Mob horse, Side side) {
         if(horse == null)
             return;
         horse.ejectPassengers();
@@ -385,7 +384,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         if(level().isClientSide)
             return;
 
-        Horse horse = getHorse(Side.LEFT);
+        Mob horse = getHorse(Side.LEFT);
         if(horse != null)
             horse.setNoAi(false);
 
@@ -479,12 +478,12 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
             speedLevel = (speedLevel + 1) % SPEED_LEVELS;
     }
 
-    private Horse getHorse(Side side) {
+    private Mob getHorse(Side side) {
         return horses[side.ordinal()];
     }
 
-    private void setHorse(Horse horse, Side side) {
-        Horse old = getHorse(side);
+    private void setHorse(Mob horse, Side side) {
+        Mob old = getHorse(side);
         if(old != null)
             old.setNoAi(false);
         if(horse != null)
@@ -529,10 +528,6 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
 
     protected void setHealth(float health) {
         entityData.set(DATA_ID_HEALTH, Mth.clamp(health, 0, maxHealth));
-    }
-
-    public double getCurrentSpeed() {
-        return currentSpeed;
     }
 
     @Override

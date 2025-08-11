@@ -32,7 +32,7 @@ public class CommonEvents {
             event.setCanceled(true);
         }
         else if(target instanceof LivingEntity && !target.getType().is(TrottingWagons.CANNOT_MOUNT_WAGON)) {
-            if(target instanceof TamableAnimal tamable && !tamable.getOwnerUUID().equals(player.getUUID()))
+            if(target instanceof TamableAnimal tamable && tamable.getOwnerUUID() != null && !tamable.getOwnerUUID().equals(player.getUUID()))
                 return; // Prevent players from kidnapping each other's tamed mobs.
 
             level.getEntitiesOfClass(AbstractWagon.class, target.getBoundingBox().inflate(3)).stream()

@@ -5,7 +5,6 @@ import net.favouriteless.trotting_wagons.common.entities.base.AbstractWagon;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.item.DyeColor;
 import software.bernie.geckolib.core.animation.AnimationProcessor;
 import software.bernie.geckolib.core.animation.AnimationState;
@@ -37,7 +36,7 @@ public class WagonModel<T extends AbstractWagon> extends DefaultedEntityGeoModel
         processor.getBone("FrontWheels").setRotX(-rot);
         processor.getBone("RearWheels").setRotX(-rot);
 
-        if(!wagon.level().getEntitiesOfClass(Horse.class, wagon.getBoundingBox().inflate(10), Mob::isNoAi).isEmpty()) {
+        if(!wagon.level().getEntitiesOfClass(Mob.class, wagon.getBoundingBox().inflate(10), Mob::isNoAi).isEmpty()) {
             processor.getBone("Tongue").setRotX(wagon.getShaftAngle() * Mth.DEG_TO_RAD);
         }
     }

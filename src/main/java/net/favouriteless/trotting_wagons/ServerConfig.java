@@ -7,11 +7,14 @@ import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.List;
+
 public class ServerConfig {
 
     public static final ServerConfig INSTANCE;
     public static final ForgeConfigSpec SPEC;
 
+    public final ConfigValue<List<? extends String>> allowedEntities;
     public final ConfigValue<String> repairItem;
     public final IntValue repairPerItem;
 
@@ -31,6 +34,7 @@ public class ServerConfig {
     public final DoubleValue armoredTurnRate;
 
     public ServerConfig(Builder builder) {
+        this.allowedEntities = builder.comment("EntityTypes allowed to pull wagons").defineList("allowed_entities", List.of("minecraft:horse"), e -> true);
         this.repairItem = builder.comment("ID of the item (or tag, if starting with #) used to repair wagons").define("repair_material", "minecraft:iron_ingot");
         this.repairPerItem = builder.comment("The amount of durability regained per repair item.").defineInRange("repair_value", 10, 0, Integer.MAX_VALUE);
 

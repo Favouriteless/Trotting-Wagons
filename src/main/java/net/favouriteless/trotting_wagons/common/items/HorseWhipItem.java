@@ -1,6 +1,8 @@
 package net.favouriteless.trotting_wagons.common.items;
 
 import net.favouriteless.trotting_wagons.common.entities.base.AbstractWagon;
+import net.favouriteless.trotting_wagons.common.init.TWSoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +22,7 @@ public class HorseWhipItem extends Item {
             if(!level.isClientSide)
                 wagon.tryCycleSpeed(player);
 
+            level.playSound(player, player.getX(), player.getY(), player.getZ(), TWSoundEvents.WHIP.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
             return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide);
         }
 
