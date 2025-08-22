@@ -92,33 +92,22 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
 
     private void validateHorses() {
         if(firstTick || level().getGameTime() % 100 == 0) { // Repeated checks help resolve chunk loading issues.
-            Mob horse = tryGetHorse(Side.LEFT);
-            if(horse != null)
-                setHorse(horse, Side.LEFT);
-
-            horse = tryGetHorse(Side.RIGHT);
-            if(horse != null)
-                setHorse(horse, Side.RIGHT);
+            setHorse(getHorse(Side.LEFT), Side.LEFT);
+            setHorse(getHorse(Side.RIGHT), Side.RIGHT);
         }
 
-        if(!isHorseInRange(Side.LEFT))
-            setHorse(null, Side.LEFT);
-        if(!isHorseInRange(Side.LEFT))
-            setHorse(null, Side.RIGHT);
+        validate(Side.LEFT);
+        validate(Side.RIGHT);
     }
 
-    private Mob tryGetHorse(Side side) {
-        final Mob horse = getHorse(side);
-        final UUID uuid = getHorseUUID(side);
-
-        if(uuid == null || horse != null)
-            return null;
-
-        return level().getEntitiesOfClass(Mob.class, getBoundingBox().inflate(5))
-                .stream()
-                .filter(h -> h.getUUID().equals(uuid))
-                .findFirst()
-                .orElse(null);
+    private void validate(Side side) {
+        Mob horse = getHorse(side);
+        if(horse == null)
+            return;
+        if(horse.isLeashed())
+            setHorse(null, side);
+        else if(!isHorseInRange(side))
+            horse.setPos(getHorsePos(side));
     }
 
     private boolean isHorseInRange(Side side) {
@@ -308,7 +297,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
 
                 return player.startRiding(this) ? InteractionResult.CONSUME : InteractionResult.PASS;
             }
-            return InteractionResult.sidedSuccess(isClientSide);
+            return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
     }
@@ -479,7 +468,15 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
     }
 
     private Mob getHorse(Side side) {
-        return horses[side.ordinal()];
+        final UUID uuid = horseUuids[side.ordinal()];
+        Mob horse = horses[side.ordinal()];
+
+        if(uuid == null)
+            return null;
+        if(horse == null && level().getEntities().get(uuid) instanceof Mob mob)
+            horse = mob;
+
+        return horse != null && horse.isAlive() ? horse : null;
     }
 
     private void setHorse(Mob horse, Side side) {
