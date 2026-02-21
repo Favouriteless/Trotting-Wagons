@@ -2,10 +2,10 @@ package net.favouriteless.trotting_wagons.client;
 
 import net.favouriteless.trotting_wagons.common.entities.base.AbstractGeckolibVehicle;
 import net.favouriteless.trotting_wagons.common.entities.base.AbstractWagon;
-import net.favouriteless.trotting_wagons.common.init.TWPackets;
-import net.favouriteless.trotting_wagons.common.network.packets.VehicleSteerPacket;
+import net.favouriteless.trotting_wagons.common.network.packets.SteeringPayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class TWClient {
 
@@ -18,7 +18,7 @@ public class TWClient {
         if(player == null)
             return;
 
-        TWPackets.INSTANCE.sendToServer(new VehicleSteerPacket(vehicle.getId(), player.input.leftImpulse));
+        PacketDistributor.sendToServer(new SteeringPayload(vehicle.getId(), player.input.leftImpulse));
     }
 
 }

@@ -37,7 +37,7 @@ public class ConestogaWagon extends AbstractInventoryWagon {
 
     @Override
     public ItemStack getPickResult() {
-        return WagonItem.setupNbt(new ItemStack(TWItems.CONESTOGA_WAGON.get()), this.getColor());
+        return WagonItem.setupComponents(new ItemStack(TWItems.CONESTOGA_WAGON.get()), this.getColor());
     }
 
 }

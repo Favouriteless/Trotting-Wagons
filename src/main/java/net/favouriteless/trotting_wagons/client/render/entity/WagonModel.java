@@ -6,8 +6,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.DyeColor;
-import software.bernie.geckolib.core.animation.AnimationProcessor;
-import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.animation.AnimationProcessor;
+import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 
 public class WagonModel<T extends AbstractWagon> extends DefaultedEntityGeoModel<T> {

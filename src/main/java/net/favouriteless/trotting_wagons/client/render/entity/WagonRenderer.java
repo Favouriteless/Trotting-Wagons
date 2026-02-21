@@ -19,9 +19,8 @@ public class WagonRenderer<T extends AbstractWagon> extends GeoEntityRenderer<T>
     }
 
     @Override
-    public void preRender(PoseStack pose, T wagon, BakedGeoModel model, MultiBufferSource bufferSource,
-                          VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay,
-                          float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack pose, T wagon, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer,
+                          boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
 
         float pitch = wagon.getXRot(partialTick);
         float yaw = -Mth.rotLerp(partialTick, wagon.yRotO, wagon.getYRot());
@@ -36,7 +35,7 @@ public class WagonRenderer<T extends AbstractWagon> extends GeoEntityRenderer<T>
         pose.mulPose(Axis.XP.rotationDegrees(pitch));
         pose.translate(mid.x, 0, mid.z);
 
-        super.preRender(pose, wagon, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.preRender(pose, wagon, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
 }

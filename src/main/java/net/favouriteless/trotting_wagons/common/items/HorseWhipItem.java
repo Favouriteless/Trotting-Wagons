@@ -29,6 +29,4 @@ public class HorseWhipItem extends Item {
         return InteractionResultHolder.pass(player.getItemInHand(hand));
     }
 
-
-
 }

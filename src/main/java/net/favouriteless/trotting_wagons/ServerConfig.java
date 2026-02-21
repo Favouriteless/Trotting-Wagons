@@ -1,10 +1,10 @@
 package net.favouriteless.trotting_wagons;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.Builder;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.Builder;
+import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
+import net.neoforged.neoforge.common.ModConfigSpec.DoubleValue;
+import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 public class ServerConfig {
 
     public static final ServerConfig INSTANCE;
-    public static final ForgeConfigSpec SPEC;
+    public static final ModConfigSpec SPEC;
 
     public final ConfigValue<List<? extends String>> allowedEntities;
     public final ConfigValue<String> repairItem;
@@ -59,7 +59,7 @@ public class ServerConfig {
     }
 
     static {
-        Pair<ServerConfig, ForgeConfigSpec> pair = new ForgeConfigSpec.Builder().configure(ServerConfig::new);
+        Pair<ServerConfig, ModConfigSpec> pair = new ModConfigSpec.Builder().configure(ServerConfig::new);
         INSTANCE = pair.getLeft();
         SPEC = pair.getRight();
     }

@@ -12,9 +12,9 @@ license="${mod_license}"
     description='''${mod_description}'''
 
 [[dependencies.${mod_id}]] #optional
-    modId="forge" #mandatory
+    modId="neoforge" #mandatory
     mandatory=true #mandatory
-    versionRange="${forge_version_range}" #mandatory
+    versionRange="[${neo_version},)" #mandatory
     ordering="NONE"
     side="BOTH"
 

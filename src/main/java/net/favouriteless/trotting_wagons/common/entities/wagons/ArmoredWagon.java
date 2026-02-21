@@ -29,7 +29,7 @@ public class ArmoredWagon extends AbstractWagon {
 
     @Override
     public ItemStack getPickResult() {
-        return WagonItem.setupNbt(new ItemStack(TWItems.ARMORED_WAGON.get()), getColor());
+        return WagonItem.setupComponents(new ItemStack(TWItems.ARMORED_WAGON.get()), getColor());
     }
 
     @Override

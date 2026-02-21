@@ -13,11 +13,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager.ControllerRegistrar;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager.ControllerRegistrar;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public abstract class AbstractGeckolibVehicle extends Entity implements GeoEntity {
@@ -217,7 +217,7 @@ public abstract class AbstractGeckolibVehicle extends Entity implements GeoEntit
     }
 
     @Override
-    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps, boolean teleport) {
+    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
         lerpX = x;
         lerpY = y;
         lerpZ = z;
@@ -237,11 +237,6 @@ public abstract class AbstractGeckolibVehicle extends Entity implements GeoEntit
     @Override
     public boolean isPickable() {
         return true;
-    }
-
-    @Override
-    public float getStepHeight() {
-        return 1.0F;
     }
 
     @Override

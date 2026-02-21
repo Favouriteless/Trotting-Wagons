@@ -7,10 +7,12 @@ import net.favouriteless.trotting_wagons.common.init.TWItems;
 import net.favouriteless.trotting_wagons.common.util.LevelUtils;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.SynchedEntityData.Builder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -33,7 +35,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.OptionalInt;
 import java.util.Random;
@@ -251,7 +252,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
                 return InteractionResult.sidedSuccess(isClientSide);
             }
 
-            if(getHealth() < maxHealth && stack.is(ForgeRegistries.ITEMS.getValue(new ResourceLocation(ServerConfig.INSTANCE.repairItem.get())))) {
+            if(getHealth() < maxHealth && stack.is(BuiltInRegistries.ITEM.get(ResourceLocation.parse(ServerConfig.INSTANCE.repairItem.get())))) {
                 if(!isClientSide) {
                     stack.shrink(1);
                     setHealth(getHealth() + ServerConfig.INSTANCE.repairPerItem.get());
@@ -282,7 +283,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
                     if(passenger instanceof Mob mob) {
                         mob.stopRiding();
                         player.getItemInHand(hand).shrink(1);
-                        if(mob.canBeLeashed(player))
+                        if(mob.canBeLeashed())
                             mob.setLeashedTo(player, true);
                         break;
                     }
@@ -432,10 +433,10 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
     }
 
     @Override
-    protected void defineSynchedData() {
+    protected void defineSynchedData(Builder builder) {
         DyeColor color = getDefaultColor();
-        entityData.define(DATA_ID_COLOR, color != null ? OptionalInt.of(color.getId()) : OptionalInt.empty());
-        entityData.define(DATA_ID_HEALTH, (float)0);
+        builder.define(DATA_ID_COLOR, color != null ? OptionalInt.of(color.getId()) : OptionalInt.empty());
+        builder.define(DATA_ID_HEALTH, (float)0);
     }
 
     @Override
@@ -469,10 +470,10 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
 
     private Mob getHorse(Side side) {
         final UUID uuid = horseUuids[side.ordinal()];
+        if(uuid == null) return null;
+
         Mob horse = horses[side.ordinal()];
 
-        if(uuid == null)
-            return null;
         if(horse == null && level().getEntities().get(uuid) instanceof Mob mob)
             horse = mob;
 

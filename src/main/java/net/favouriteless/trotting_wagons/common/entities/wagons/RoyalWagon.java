@@ -35,7 +35,7 @@ public class RoyalWagon extends AbstractInventoryWagon {
 
     @Override
     public ItemStack getPickResult() {
-        return WagonItem.setupNbt(new ItemStack(TWItems.ROYAL_WAGON.get()), this.getColor());
+        return WagonItem.setupComponents(new ItemStack(TWItems.ROYAL_WAGON.get()), this.getColor());
     }
 
 }
