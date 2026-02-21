@@ -240,6 +240,11 @@ public abstract class AbstractGeckolibVehicle extends Entity implements GeoEntit
     }
 
     @Override
+    public float maxUpStep() {
+        return 1.1F;
+    }
+
+    @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animCache;
     }

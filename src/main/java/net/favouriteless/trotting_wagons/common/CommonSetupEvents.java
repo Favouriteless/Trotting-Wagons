@@ -6,6 +6,7 @@ import net.favouriteless.trotting_wagons.common.init.TWEntityTypes;
 import net.favouriteless.trotting_wagons.common.init.TWItems;
 import net.favouriteless.trotting_wagons.common.items.WagonItem;
 import net.favouriteless.trotting_wagons.common.network.packets.SteeringPayload;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -14,6 +15,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -43,5 +45,4 @@ public class CommonSetupEvents {
         PayloadRegistrar registrar = event.registrar("1");
         registrar.playToServer(SteeringPayload.TYPE, SteeringPayload.CODEC, SteeringPayload::handle);
     }
-
 }
