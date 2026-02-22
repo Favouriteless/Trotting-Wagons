@@ -11,5 +11,5 @@
     "S": { "item": "minecraft:stick" },
     "I": { "item": "minecraft:iron_ingot" }
   },
-  "result": { "item": "trotting_wagons:wheel" }
+  "result": { "id": "trotting_wagons:wheel" }
 }

@@ -2,15 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "pattern": [
-    "PPP",
-    "LIL",
+    "SSS",
+    "PCP",
     "WWW"
   ],
   "key": {
     "P": { "item": "minecraft:spruce_planks" },
-    "I": { "item": "minecraft:iron_block" },
-    "L": { "item": "minecraft:stripped_spruce_log" },
+    "C": { "item": "minecraft:chest" },
+    "S": { "item": "minecraft:white_wool" },
     "W": { "item": "trotting_wagons:wheel" }
   },
-  "result": { "item": "trotting_wagons:armored_wagon" }
+  "result": { "id": "trotting_wagons:conestoga_wagon" }
 }
