@@ -33,6 +33,11 @@ public class ServerConfig {
     public final DoubleValue armoredAcceleration;
     public final DoubleValue armoredTurnRate;
 
+    public final IntValue combatHealth;
+    public final DoubleValue combatSpeed;
+    public final DoubleValue combatAcceleration;
+    public final DoubleValue combatTurnRate;
+
     public ServerConfig(Builder builder) {
         this.allowedEntities = builder.comment("EntityTypes allowed to pull wagons").defineList("allowed_entities", List.of("minecraft:horse"), e -> true);
         this.repairItem = builder.comment("ID of the item (or tag, if starting with #) used to repair wagons").define("repair_material", "minecraft:iron_ingot");
@@ -56,6 +61,11 @@ public class ServerConfig {
         this.armoredAcceleration = builder.comment("Acceleration (seconds until maximum speed)").defineInRange("armored_wagon_acceleration", 4.0D, 0.0D, Double.MAX_VALUE);
         this.armoredTurnRate = builder.comment("Turn rate").defineInRange("armored_wagon_turn_rate", 2.0D, 0.0D, Double.MAX_VALUE);
         builder.pop();
+        builder.push("Combat Wagon Options");
+        this.combatHealth = builder.comment("Maximum health").defineInRange("combat_wagon_health", 80, 0, Integer.MAX_VALUE);
+        this.combatSpeed = builder.comment("Speed (per level)").defineInRange("combat_wagon_speed", 0.23D, 0.0D, Double.MAX_VALUE);
+        this.combatAcceleration = builder.comment("Acceleration (seconds until maximum speed)").defineInRange("combat_wagon_acceleration", 5.0D, 0.0D, Double.MAX_VALUE);
+        this.combatTurnRate = builder.comment("Turn rate").defineInRange("combat_wagon_turn_rate", 4.0D, 0.0D, Double.MAX_VALUE);
     }
 
     static {

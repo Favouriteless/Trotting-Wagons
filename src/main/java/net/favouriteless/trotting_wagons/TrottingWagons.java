@@ -71,9 +71,10 @@ public class TrottingWagons {
         if(!event.getTabKey().equals(CreativeModeTabs.REDSTONE_BLOCKS))
             return;
 
-        event.accept(TWItems.ARMORED_WAGON.get());
+        event.accept(WagonItem.setupNbt(new ItemStack(TWItems.ARMORED_WAGON.get()), DyeColor.WHITE));
         event.accept(WagonItem.setupNbt(new ItemStack(TWItems.CONESTOGA_WAGON.get()), DyeColor.WHITE));
         event.accept(WagonItem.setupNbt(new ItemStack(TWItems.ROYAL_WAGON.get()), DyeColor.WHITE));
+        event.accept(WagonItem.setupNbt(new ItemStack(TWItems.COMBAT_WAGON.get()), DyeColor.WHITE));
         event.accept(TWItems.HORSE_WHIP.get());
         event.accept(TWItems.WHEEL.get());
     }

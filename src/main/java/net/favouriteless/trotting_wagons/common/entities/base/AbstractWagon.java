@@ -467,7 +467,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
             speedLevel = (speedLevel + 1) % SPEED_LEVELS;
     }
 
-    private Mob getHorse(Side side) {
+    protected Mob getHorse(Side side) {
         final UUID uuid = horseUuids[side.ordinal()];
         Mob horse = horses[side.ordinal()];
 
@@ -537,7 +537,11 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         return !getType().is(EntityTypeTags.FALL_DAMAGE_IMMUNE);
     }
 
-    private enum Side {
+    public double getCurrentSpeed() {
+        return currentSpeed;
+    }
+
+    protected enum Side {
         LEFT, RIGHT
     }
 

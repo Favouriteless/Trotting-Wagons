@@ -2,6 +2,7 @@ package net.favouriteless.trotting_wagons.common.init;
 
 import net.favouriteless.trotting_wagons.TrottingWagons;
 import net.favouriteless.trotting_wagons.common.entities.wagons.ArmoredWagon;
+import net.favouriteless.trotting_wagons.common.entities.wagons.CombatWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.ConestogaWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.RoyalWagon;
 import net.minecraft.world.entity.EntityType;
@@ -22,5 +23,8 @@ public class TWEntityTypes {
 
     public static final RegistryObject<EntityType<ArmoredWagon>> ARMORED_WAGON = REGISTRY.register("armored_wagon", () ->
             EntityType.Builder.of(ArmoredWagon::new, MobCategory.MISC).sized(3.0F, 2.9F).build("armored_wagon"));
+
+    public static final RegistryObject<EntityType<CombatWagon>> COMBAT_WAGON = REGISTRY.register("combat_wagon", () ->
+            EntityType.Builder.of(CombatWagon::new, MobCategory.MISC).sized(3.0F, 2.9F).build("combat_wagon"));
 
 }

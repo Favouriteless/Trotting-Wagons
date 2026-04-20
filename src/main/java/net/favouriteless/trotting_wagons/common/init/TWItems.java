@@ -17,6 +17,7 @@ public class TWItems {
     public static final RegistryObject<WagonItem> CONESTOGA_WAGON = REGISTRY.register("conestoga_wagon", () -> new WagonItem(TWEntityTypes.CONESTOGA_WAGON::get, wagonProps()));
     public static final RegistryObject<WagonItem> ROYAL_WAGON = REGISTRY.register("royal_wagon", () -> new WagonItem(TWEntityTypes.ROYAL_WAGON::get, wagonProps()));
     public static final RegistryObject<WagonItem> ARMORED_WAGON = REGISTRY.register("armored_wagon", () -> new WagonItem(TWEntityTypes.ARMORED_WAGON::get, wagonProps()));
+    public static final RegistryObject<WagonItem> COMBAT_WAGON = REGISTRY.register("combat_wagon", () -> new WagonItem(TWEntityTypes.COMBAT_WAGON::get, wagonProps()));
 
     public static final RegistryObject<HorseWhipItem> HORSE_WHIP = REGISTRY.register("horse_whip", () -> new HorseWhipItem(new Properties().stacksTo(1)));
     public static final RegistryObject<Item> WHEEL = REGISTRY.register("wheel", () -> new Item(new Properties()));

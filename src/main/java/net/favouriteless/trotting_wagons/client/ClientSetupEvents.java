@@ -2,6 +2,7 @@ package net.favouriteless.trotting_wagons.client;
 
 import net.favouriteless.trotting_wagons.TrottingWagons;
 import net.favouriteless.trotting_wagons.client.render.entity.WagonRenderer;
+import net.favouriteless.trotting_wagons.client.screens.CombatScreen;
 import net.favouriteless.trotting_wagons.client.screens.ConestogaScreen;
 import net.favouriteless.trotting_wagons.client.screens.RoyalScreen;
 import net.favouriteless.trotting_wagons.common.init.TWEntityTypes;
@@ -21,6 +22,7 @@ public class ClientSetupEvents {
     public static void onClientSetup(FMLClientSetupEvent event) {
         MenuScreens.register(TWMenuTypes.CONESTOGA.get(), ConestogaScreen::new);
         MenuScreens.register(TWMenuTypes.ROYAL.get(), RoyalScreen::new);
+        MenuScreens.register(TWMenuTypes.COMBAT.get(), CombatScreen::new);
     }
 
     @SubscribeEvent
@@ -28,6 +30,7 @@ public class ClientSetupEvents {
         event.registerEntityRenderer(TWEntityTypes.CONESTOGA_WAGON.get(), context -> new WagonRenderer<>(context, TrottingWagons.id("conestoga_wagon")));
         event.registerEntityRenderer(TWEntityTypes.ROYAL_WAGON.get(), context -> new WagonRenderer<>(context, TrottingWagons.id("royal_wagon")));
         event.registerEntityRenderer(TWEntityTypes.ARMORED_WAGON.get(), context -> new WagonRenderer<>(context, TrottingWagons.id("armored_wagon")));
+        event.registerEntityRenderer(TWEntityTypes.COMBAT_WAGON.get(), context -> new WagonRenderer<>(context, TrottingWagons.id("combat_wagon")));
     }
 
 }

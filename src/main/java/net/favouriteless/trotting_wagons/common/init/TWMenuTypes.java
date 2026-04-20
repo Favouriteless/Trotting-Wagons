@@ -1,6 +1,7 @@
 package net.favouriteless.trotting_wagons.common.init;
 
 import net.favouriteless.trotting_wagons.TrottingWagons;
+import net.favouriteless.trotting_wagons.common.menus.CombatMenu;
 import net.favouriteless.trotting_wagons.common.menus.ConestogaMenu;
 import net.favouriteless.trotting_wagons.common.menus.RoyalMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -15,5 +16,6 @@ public class TWMenuTypes {
 
     public static final RegistryObject<MenuType<ConestogaMenu>> CONESTOGA = REGISTRY.register("conestoga_wagon", () -> IForgeMenuType.create(ConestogaMenu::new));
     public static final RegistryObject<MenuType<RoyalMenu>> ROYAL = REGISTRY.register("royal_wagon", () -> IForgeMenuType.create(RoyalMenu::new));
+    public static final RegistryObject<MenuType<CombatMenu>> COMBAT = REGISTRY.register("combat_wagon", () -> IForgeMenuType.create(CombatMenu::new));
 
 }
