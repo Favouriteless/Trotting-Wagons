@@ -56,9 +56,7 @@ public abstract class AbstractWagonScreen<T extends AbstractWagonMenu> extends A
         if(seatButtons == null)
             return;
         for(SeatButton button : seatButtons) {
-            var tip = button.delayedTooltip();
-            if(tip != null)
-                graphics.renderTooltip(font, tip, mouseX, mouseY);
+            button.renderDelayedTooltip(graphics, font, mouseX, mouseY);
         }
     }
 

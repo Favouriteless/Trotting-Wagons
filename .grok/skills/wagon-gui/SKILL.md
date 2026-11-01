@@ -40,4 +40,16 @@ Two items, no recipe unless the user asks:
 
 An empty slot hides both bones and leaves 0 draft slots. Its ghost icon is the дышло item (`shafts`, English Tongue). The harness cannot be taken out or swapped while any animal is hitched. Right-click the wagon with the item to install it. Shift-right-click the part to take it back. The harness still stays while an animal is hitched. Both bones still take the same `tongueAngle`.
 
-Wire this slot only on a wagon whose GUI already paints it. An empty slot on an old screen would clear that wagon's existing hitch. Kibitka and every wagon without this cell keep their current `hitchSlots()` and bone choice.
+Wire this slot only on a wagon whose GUI already paints it. An empty slot on an old screen would clear that wagon's existing hitch.
+
+## Painted exceptions
+
+Log wagon, `log_wagon.png`, is 320×190 and that is the one-row size. Name, owner, and kilometres sit to the right of the driver, as on the ware wagon. Cargo is 15 columns from (25, 14) and is not painted: draw each visible well. Extra rows insert at y=54 and push the painted lower half down. The durability bar stays 4px under the last cargo row and 8px above the driver. Harness (26, 98), wheels (17, 146), repair header on the driver top, and the player inventory stay in that painted half.
+
+Armored wagon, `armored_wagon.png`, is 320×174. The wells match the passenger wagon without lanterns. The title row is on top. Seven player seats start at (69, 38). There is no custom-item column.
+
+Royal carriage, `royal_carriage_ui.png` → `royal_wagon.png`, is 320×250. Cargo is 10×4 from (71, 21), forty slots. Health is (13, 96). Five seats start at (95, 114), step 26: driver, the bench nearer the driver, then the far bench. Harness is (26, 158). Wheels are (17, 206). Player inventory is (80, 166). Repair header is the top of the seats. Inside the cabin each bench holds two players at x ±7/16, z +0.7 and −0.7.
+
+Conestoga, `conestoga_ui.png` → `conestoga_wagon.png`, is 320×236. Cargo is 14×3 from (18, 22), forty-two slots, and a second page of forty-two behind the lower button at (277, 50). The upper button at (277, 20) is the default page and draws a chest icon. Health is (13, 82). Seats from (108, 100): driver, universal, large animal, universal. Harness is (26, 144). Wheels are (17, 192). Player inventory is (80, 152). Repair header is the top of the seats. The hold, the large animal, and the two universal seats exclude one another.
+
+Do not add a wagon lock button. The user has not designed that control yet and will ask for it later.

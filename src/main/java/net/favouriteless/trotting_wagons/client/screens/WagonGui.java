@@ -9,6 +9,7 @@ import net.favouriteless.trotting_wagons.common.menus.BannerSlot;
 import net.favouriteless.trotting_wagons.common.menus.BarrelMenu;
 import net.favouriteless.trotting_wagons.common.menus.BarrelSlot;
 import net.favouriteless.trotting_wagons.common.menus.ChestSlot;
+import net.favouriteless.trotting_wagons.common.menus.ConestogaMenu;
 import net.favouriteless.trotting_wagons.common.menus.DebugMenu;
 import net.favouriteless.trotting_wagons.common.menus.HarnessSlot;
 import net.favouriteless.trotting_wagons.common.menus.KibitkaMenu;
@@ -17,6 +18,7 @@ import net.favouriteless.trotting_wagons.common.menus.LogMenu;
 import net.favouriteless.trotting_wagons.common.menus.PassengerMenu;
 import net.favouriteless.trotting_wagons.common.menus.WareMenu;
 import net.favouriteless.trotting_wagons.common.menus.RepairSlot;
+import net.favouriteless.trotting_wagons.common.menus.RoyalMenu;
 import net.favouriteless.trotting_wagons.common.menus.LanternSlot;
 import net.favouriteless.trotting_wagons.common.menus.WheelSlot;
 import net.minecraft.client.gui.Font;
@@ -167,6 +169,10 @@ final class WagonGui {
             return inventoryWagon.getWagon();
         if(menu instanceof ArmoredMenu armored)
             return armored.getWagon();
+        if(menu instanceof RoyalMenu royal)
+            return royal.getWagon();
+        if(menu instanceof ConestogaMenu conestoga)
+            return conestoga.getWagon();
         return null;
     }
 

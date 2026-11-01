@@ -8,6 +8,7 @@ import net.favouriteless.trotting_wagons.common.network.packets.SelectSeatPayloa
 import net.favouriteless.trotting_wagons.common.network.packets.ToggleSeatLockPayload;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.PlayerFaceRenderer;
@@ -17,6 +18,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,7 +43,7 @@ public class SeatButton extends AbstractWidget {
     private final AbstractWagon.Side draftSide;
     private final boolean drawFrame;
     private long hoverStart = -1L;
-    private Component tooltip = Component.empty();
+    private List<Component> tooltip = List.of();
 
     public static void bind(List<SeatButton> buttons) {
         OPEN.clear();
@@ -113,7 +115,7 @@ public class SeatButton extends AbstractWidget {
         int x1 = mouseX - size / 2;
         int y1 = mouseY - size / 2;
         InventoryScreen.renderEntityInInventoryFollowsMouse(
-                graphics, x1, y1, x1 + size, y1 + size, 14, 0.15F, mouseX, mouseY, living
+                graphics, x1, y1, x1 + size, y1 + size, previewScale(living, 14), 0.15F, mouseX, mouseY, living
         );
     }
 
@@ -172,10 +174,11 @@ public class SeatButton extends AbstractWidget {
         tooltip = occupant.tooltip();
     }
 
-    public Component delayedTooltip() {
-        if(!isHovered() || hoverStart < 0 || Util.getMillis() - hoverStart < TOOLTIP_DELAY_MS)
-            return null;
-        return tooltip;
+    /** The default font draws a newline as a missing-glyph box. Each entry is its own line. */
+    public void renderDelayedTooltip(GuiGraphics graphics, Font font, int mouseX, int mouseY) {
+        if(!isHovered() || hoverStart < 0 || Util.getMillis() - hoverStart < TOOLTIP_DELAY_MS || tooltip.isEmpty())
+            return;
+        graphics.renderComponentTooltip(font, tooltip, mouseX, mouseY);
     }
 
     @Override
@@ -219,13 +222,13 @@ public class SeatButton extends AbstractWidget {
         graphics.drawString(Minecraft.getInstance().font, getMessage(), getX() + 2, getY() + 2, 0xFFFFFF, true);
     }
 
-    private Component emptyAnimalTooltip() {
+    private List<Component> emptyAnimalTooltip() {
         Component hint = wagon.seatBlockHint(seat);
         if(hint == null)
-            return lockTooltip();
+            return List.of(lockTooltip());
         if(wagon.isSeatLocked(seat))
-            return hint.copy().append("\n").append(lockTooltip());
-        return hint;
+            return List.of(hint, lockTooltip());
+        return List.of(hint);
     }
 
     @Override
@@ -243,6 +246,8 @@ public class SeatButton extends AbstractWidget {
             PacketDistributor.sendToServer(new ToggleSeatLockPayload(wagon.getId(), seat));
             return true;
         }
+        if(draftSide == null && wagon.seatBlockHint(seat) != null)
+            return true;
 
         Kind kind = occupant().kind();
         if(kind == Kind.ANIMAL)
@@ -266,34 +271,34 @@ public class SeatButton extends AbstractWidget {
         WagonSeat definition = wagon.getSeat(seat);
         if(id < 0) {
             if(definition.kind() == WagonSeat.Kind.UNIVERSAL)
-                return new Occupant(Kind.EMPTY_PLAYER, null, Component.translatable("gui.trotting_wagons.tooltip.move").append("\n").append(lockTooltip()));
+                return new Occupant(Kind.EMPTY_PLAYER, null, List.of(Component.translatable("gui.trotting_wagons.tooltip.move"), lockTooltip()));
             if(definition.kind() == WagonSeat.Kind.ANIMAL || definition.kind() == WagonSeat.Kind.ANIMALBIG)
                 return new Occupant(Kind.LOCKABLE, null, emptyAnimalTooltip());
-            return new Occupant(Kind.EMPTY_PLAYER, null, Component.translatable("gui.trotting_wagons.tooltip.move"));
+            return new Occupant(Kind.EMPTY_PLAYER, null, List.of(Component.translatable("gui.trotting_wagons.tooltip.move")));
         }
 
         if(!(wagon.level().getEntity(id) instanceof LivingEntity living))
-            return new Occupant(Kind.UNKNOWN, null, Component.translatable("gui.trotting_wagons.tooltip.unknown"));
+            return new Occupant(Kind.UNKNOWN, null, List.of(Component.translatable("gui.trotting_wagons.tooltip.unknown")));
 
         if(living instanceof Player player) {
             if(player == Minecraft.getInstance().player)
-                return new Occupant(Kind.SELF, player, Component.translatable("gui.trotting_wagons.tooltip.here"));
-            return new Occupant(Kind.PLAYER, player, Component.translatable("gui.trotting_wagons.tooltip.occupied", player.getName()));
+                return new Occupant(Kind.SELF, player, List.of(Component.translatable("gui.trotting_wagons.tooltip.here")));
+            return new Occupant(Kind.PLAYER, player, List.of(Component.translatable("gui.trotting_wagons.tooltip.occupied", player.getName())));
         }
 
-        Component tip = Component.translatable("gui.trotting_wagons.tooltip.eject");
-        if(definition.canLockAnimals())
-            tip = tip.copy().append("\n").append(lockTooltip());
+        List<Component> tip = definition.canLockAnimals()
+                ? List.of(Component.translatable("gui.trotting_wagons.tooltip.eject"), lockTooltip())
+                : List.of(Component.translatable("gui.trotting_wagons.tooltip.eject"));
         return new Occupant(Kind.ANIMAL, living, tip);
     }
 
     private Occupant draftOccupant() {
         int id = wagon.getHitchEntityId(draftSide);
         if(id < 0)
-            return new Occupant(Kind.LOCKABLE, null, Component.translatable("gui.trotting_wagons.seat.draft"));
+            return new Occupant(Kind.LOCKABLE, null, List.of(Component.translatable("gui.trotting_wagons.seat.draft")));
         if(!(wagon.level().getEntity(id) instanceof LivingEntity living) || living instanceof Player)
-            return new Occupant(Kind.UNKNOWN, null, Component.translatable("gui.trotting_wagons.tooltip.unknown"));
-        return new Occupant(Kind.ANIMAL, living, Component.translatable("gui.trotting_wagons.tooltip.unhitch"));
+            return new Occupant(Kind.UNKNOWN, null, List.of(Component.translatable("gui.trotting_wagons.tooltip.unknown")));
+        return new Occupant(Kind.ANIMAL, living, List.of(Component.translatable("gui.trotting_wagons.tooltip.unhitch")));
     }
 
     private boolean accepts(SeatButton source) {
@@ -331,15 +336,26 @@ public class SeatButton extends AbstractWidget {
     }
 
     private void drawAnimal(GuiGraphics graphics, LivingEntity living) {
-        graphics.enableScissor(getX() + 2, getY() + 10, getX() + width - 2, getY() + height - 2);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
-                graphics,
-                getX() + 3, getY() + 9, getX() + width - 3, getY() + height - 2,
-                10, 0.35F,
-                getX() + width / 2F, getY() + height / 2F,
-                living
-        );
+        int x1 = getX() + 1;
+        int y1 = getY() + 1;
+        int x2 = getX() + width - 1;
+        int y2 = getY() + height - 1;
+        graphics.enableScissor(x1, y1, x2, y2);
+        if(draftSide != null) {
+            // Body yaw is 180° + angle * 20. −1.5 turns the hitch animal 30° the other way.
+            InventoryScreen.renderEntityInInventoryFollowsAngle(graphics, x1, y1, x2, y2, previewScale(living, 8), 0.12F, -1.5F, 0.0F, living);
+        } else {
+            InventoryScreen.renderEntityInInventoryFollowsMouse(
+                    graphics, x1, y1, x2, y2, previewScale(living, 10), 0.35F, getX() + width / 2F, getY() + height / 2F, living);
+        }
         graphics.disableScissor();
+    }
+
+    /** A camel is 2.375 blocks tall against a horse's 1.6, so the same slot scale fills the button. */
+    private static int previewScale(LivingEntity living, int base) {
+        if(living instanceof Camel)
+            return Math.max(1, Math.round(base * 1.6F / 2.375F));
+        return base;
     }
 
     private void drawFitted(GuiGraphics graphics, Component text, int y) {
@@ -360,6 +376,6 @@ public class SeatButton extends AbstractWidget {
         UNKNOWN
     }
 
-    private record Occupant(Kind kind, LivingEntity entity, Component tooltip) {}
+    private record Occupant(Kind kind, LivingEntity entity, List<Component> tooltip) {}
 
 }

@@ -37,6 +37,8 @@ public class LogWagon extends AbstractWagon implements MenuProvider {
     public static final int PARTIAL_LIMIT = 1000;
 
     private static final EntityDataAccessor<Integer> DATA_CARGO = SynchedEntityData.defineId(LogWagon.class, EntityDataSerializers.INT);
+    /** 0 none, 1 the tongue item (TongueSingle), 2 the shafts item (Tongue). */
+    private static final EntityDataAccessor<Integer> DATA_HARNESS = SynchedEntityData.defineId(LogWagon.class, EntityDataSerializers.INT);
 
     public static final WagonSeat[] SEATS = new WagonSeat[] {
             new WagonSeat(seat(0, 14, -32.25D), WagonSeat.Kind.DRIVER)
@@ -66,6 +68,23 @@ public class LogWagon extends AbstractWagon implements MenuProvider {
         protected void onContentsChanged(int slot) {
             mergeSameKinds();
             syncCargo();
+        }
+    };
+    private final NonNullList<ItemStack> harness = NonNullList.withSize(1, ItemStack.EMPTY);
+    private final ItemStackHandler harnessItems = new ItemStackHandler(harness) {
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            return TWItems.isHarness(stack);
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return 1;
+        }
+
+        @Override
+        protected void onContentsChanged(int slot) {
+            syncHarness();
         }
     };
 
@@ -226,6 +245,31 @@ public class LogWagon extends AbstractWagon implements MenuProvider {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_CARGO, 0);
+        builder.define(DATA_HARNESS, 0);
+    }
+
+    @Override
+    public int hitchSlots() {
+        int slots = entityData.get(DATA_HARNESS);
+        return slots < 0 ? 0 : Math.min(slots, 2);
+    }
+
+    @Override
+    protected Vec3 hitchOffset(Side side) {
+        if(hitchSlots() >= 2)
+            return super.hitchOffset(side);
+        return new Vec3(0, 0, 77.88461D / 16D);
+    }
+
+    @Override
+    public ItemStackHandler getHarnessItems() {
+        return harnessItems;
+    }
+
+    private void syncHarness() {
+        ItemStack stack = harness.get(0);
+        int slots = stack.is(TWItems.SHAFTS.get()) ? 2 : stack.is(TWItems.TONGUE.get()) ? 1 : 0;
+        entityData.set(DATA_HARNESS, slots);
     }
 
     @Override
@@ -243,6 +287,9 @@ public class LogWagon extends AbstractWagon implements MenuProvider {
             piles.add(pile);
         }
         nbt.put("Cargo", piles);
+        CompoundTag harnessTag = new CompoundTag();
+        ContainerHelper.saveAllItems(harnessTag, harness, registryAccess());
+        nbt.put("Harness", harnessTag);
     }
 
     @Override
@@ -256,6 +303,11 @@ public class LogWagon extends AbstractWagon implements MenuProvider {
             loadPiles(nbt.getList("Cargo", Tag.TAG_COMPOUND));
         mergeSameKinds();
         syncCargo();
+        if(nbt.contains("Harness", Tag.TAG_COMPOUND)) {
+            harness.set(0, ItemStack.EMPTY);
+            ContainerHelper.loadAllItems(nbt.getCompound("Harness"), harness, registryAccess());
+        }
+        syncHarness();
     }
 
     private void loadPiles(ListTag piles) {

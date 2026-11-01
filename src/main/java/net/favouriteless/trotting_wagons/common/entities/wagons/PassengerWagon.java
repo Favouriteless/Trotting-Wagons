@@ -313,7 +313,32 @@ public class PassengerWagon extends AbstractWagon implements MenuProvider {
 
     @Override
     protected boolean dismountsBehind(LivingEntity passenger, int seat) {
-        return true;
+        return seat > 0;
+    }
+
+    @Override
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        if(claimsRearDismount(passenger))
+            return super.getDismountLocationForPassenger(passenger);
+        return besideDriver(passenger);
+    }
+
+    /** Ground spot level with the driver seat, outside the body. +X first, then the other side, then farther out. */
+    private Vec3 besideDriver(LivingEntity passenger) {
+        double z = SEATS[0].position().z;
+        double base = BODY_HALF_X + passenger.getBbWidth() * 0.5D + 0.05D;
+        Vec3 first = null;
+        for(int step = 0; step < 4; step++) {
+            double out = base + step * 0.5D;
+            for(int sign = 1; sign >= -1; sign -= 2) {
+                Vec3 pos = position().add(rotateY(new Vec3(out * sign, 0, z), getYRot()));
+                if(first == null)
+                    first = pos;
+                if(dismountFree(passenger, pos))
+                    return pos;
+            }
+        }
+        return first;
     }
 
     @Override

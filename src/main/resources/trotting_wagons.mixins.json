@@ -4,6 +4,7 @@
   "package": "net.favouriteless.trotting_wagons.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "AbstractHorseGrazeMixin",
     "LivingEntityBedMixin",
     "LivingEntityClimbMixin",
     "ServerGamePacketListenerImplMixin"

@@ -35,6 +35,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.camel.Camel;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -62,7 +64,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractWagon extends AbstractGeckolibVehicle {
 
@@ -94,6 +98,9 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
     public static final int SPEED_LEVELS = 5;
     private static final double BLOCKS_PER_SPEED_ATTRIBUTE = 43.17D;
     public static final double HORIZONTAL_TETHER = 0.5D * 0.5D; // Use sqr for performance
+    /** Farther than this from the hitch point, in any direction, and the animal is released. */
+    private static final double HITCH_BREAK_DISTANCE_SQR = 2.0D * 2.0D;
+    private static final Set<UUID> HARNESS_MARKS = ConcurrentHashMap.newKeySet();
     public static final int BOARD_COOLDOWN_TICKS = 60;
     public static final double ANIMAL_BOARD_RANGE = 1.0D;
     public static final double HITCH_RANGE = 1.5D;
@@ -271,6 +278,10 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         }
         boolean tilted = isTilted();
         Vec3 anchor = tilted ? shaftWorld(side, getYRot()) : hitchWorld(side, getYRot());
+        if(horse.position().distanceToSqr(anchor) > HITCH_BREAK_DISTANCE_SQR) {
+            unhitch(horse);
+            return;
+        }
         boolean pullHorizontal = tilted || !isHorseInRange(side);
         double x = pullHorizontal ? anchor.x : horse.getX();
         double z = pullHorizontal ? anchor.z : horse.getZ();
@@ -624,7 +635,26 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
             return;
         horse.ejectPassengers();
         horse.setDeltaMovement(Vec3.ZERO);
+        calmHarnessed(horse);
         setHorsePos(horse, getHorsePos(side), getYRot());
+    }
+
+    /** Once, at the moment of hitching. Later grazing is refused by AbstractHorseGrazeMixin. */
+    private static void calmHarnessed(Mob horse) {
+        if(horse instanceof AbstractHorse mount) {
+            if(mount.isEating())
+                mount.setEating(false);
+            if(mount.isStanding())
+                mount.setStanding(false);
+            if(mount.getXRot() != 0.0F)
+                mount.setXRot(0.0F);
+        }
+        if(horse instanceof Camel camel) {
+            if(camel.isDashing())
+                camel.setDashing(false);
+            if(camel.isCamelSitting() || camel.isInPoseTransition())
+                camel.standUpInstantly();
+        }
     }
 
     @Override
@@ -725,6 +755,10 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         return false;
     }
 
+    protected boolean claimsRearDismount(LivingEntity passenger) {
+        return passenger.getId() == dismountBehindId;
+    }
+
     protected double dismountRear() {
         return getBbWidth() * 0.5D;
     }
@@ -742,7 +776,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         return first;
     }
 
-    private boolean dismountFree(LivingEntity passenger, Vec3 pos) {
+    protected boolean dismountFree(LivingEntity passenger, Vec3 pos) {
         double width = passenger.getBbWidth() * 0.8D;
         Vec3 eye = pos.add(0, passenger.getEyeHeight(), 0);
         return LevelUtils.isEmpty(level(), AABB.ofSize(eye, width, 1.0E-6D, width));
@@ -1059,9 +1093,12 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         if(old != null && old != horse) {
             old.setNoAi(false);
             setBoardCooldown(old);
+            HARNESS_MARKS.remove(old.getUUID());
         }
-        if(horse != null)
+        if(horse != null) {
             horse.setNoAi(true);
+            HARNESS_MARKS.add(horse.getUUID());
+        }
 
         horses[side.ordinal()] = horse;
         horseUuids[side.ordinal()] = horse != null ? horse.getUUID() : null;
@@ -1262,6 +1299,11 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         return findHitch(entity) != null;
     }
 
+    /** O(1) mark written when the hitch is set. Used so a horse tick can refuse grazing without searching wagons. */
+    public static boolean isHarnessMarked(UUID uuid) {
+        return uuid != null && HARNESS_MARKS.contains(uuid);
+    }
+
     public static AbstractWagon findHitchTarget(Mob animal) {
         if(!isAllowedPuller(animal))
             return null;
@@ -1382,20 +1424,42 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
 
         if(fromSeat == to || !canPlaceAnimal(to, mob))
             return false;
-        if(fromSide != null)
-            setHorse(null, fromSide);
-        if(fromSeat >= 0) {
-            seatEntities[fromSeat] = null;
-            seatIds[fromSeat] = -1;
+        // Already aboard: only the seat record changes. startRiding would refuse a current passenger.
+        if(mob.getVehicle() == this) {
+            if(fromSide != null)
+                setHorse(null, fromSide);
+            if(fromSeat >= 0) {
+                seatEntities[fromSeat] = null;
+                seatIds[fromSeat] = -1;
+            }
             seatEntities[to] = mob;
             seatIds[to] = mob.getId();
             syncSeats();
             return true;
         }
+        if(fromSeat >= 0) {
+            seatEntities[fromSeat] = null;
+            seatIds[fromSeat] = -1;
+        }
+        // Vanilla startRiding fails for 60 ticks after a dismount. Force the mount, and put the animal back if it misses the seat.
+        if(fromSide != null)
+            setHorse(null, fromSide);
         pendingSeat = to;
-        boolean seated = mob.startRiding(this);
+        boolean seated = mob.startRiding(this, true);
         pendingSeat = -1;
-        return seated;
+        if(seated && seatIndexOf(mob) == to)
+            return true;
+        if(mob.getVehicle() != null)
+            mob.stopRiding();
+        if(fromSide != null)
+            hitchHorse(mob, fromSide);
+        else if(fromSeat >= 0) {
+            seatEntities[fromSeat] = mob;
+            seatIds[fromSeat] = mob.getId();
+        }
+        if(fromSeat >= 0)
+            syncSeats();
+        return false;
     }
 
     public boolean ejectDraft(Player player, Side side) {
@@ -1730,7 +1794,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
     public boolean movePlayerToSeat(Player player, int seat) {
         if(player.getVehicle() != this)
             return false;
-        if(seat < 0 || seat >= seats.length || !seats[seat].acceptsPlayers())
+        if(seat < 0 || seat >= seats.length || !seats[seat].acceptsPlayers() || !seatAccepts(seat, player))
             return false;
         if(seatEntities[seat] != null && seatEntities[seat] != player)
             return false;
@@ -1807,10 +1871,10 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
     private void assignSeat(Entity passenger) {
         int seat = -1;
         Integer saved = savedSeatByUuid.remove(passenger.getUUID());
-        if(saved != null && saved >= 0 && saved < seats.length && seatEntities[saved] == null && seatAccepts(saved, passenger))
-            seat = saved;
-        else if(pendingSeat >= 0 && seatEntities[pendingSeat] == null && seatAccepts(pendingSeat, passenger))
+        if(pendingSeat >= 0 && seatEntities[pendingSeat] == null && seatAccepts(pendingSeat, passenger))
             seat = pendingSeat;
+        else if(saved != null && saved >= 0 && saved < seats.length && seatEntities[saved] == null && seatAccepts(saved, passenger))
+            seat = saved;
         else
             seat = findNearestSeat(passenger);
 

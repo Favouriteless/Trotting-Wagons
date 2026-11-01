@@ -28,6 +28,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
@@ -56,8 +57,13 @@ public class AnimalWagon extends AbstractWagon implements MenuProvider {
 
     private static final int FRONT_LARGE = 3;
     private static final int REAR_LARGE = 6;
-    // Mesh tail is about 2.78 from center. The collision square stays at the wheels; unload uses this instead.
+    // Mesh tail is about 2.78 from center. Unload uses this, past the collision rear.
     private static final double BODY_REAR = 2.85D;
+    /** Bed, front rails, and driver seat. Wheels and the tongue are outside. One pixel of slack. */
+    private static final double HIT_HALF_X = 21.5D / 16D;
+    private static final double HIT_FRONT = 37.25D / 16D;
+    private static final double HIT_REAR = 45.5D / 16D;
+    private static final double HIT_HEIGHT = 2.75D;
     private static final int[] FRONT_GROUP = {1, 2, 4, 5};
     private static final int[] REAR_GROUP = {4, 5, 7, 8};
 
@@ -101,6 +107,35 @@ public class AnimalWagon extends AbstractWagon implements MenuProvider {
     @Override
     public ItemStackHandler getHarnessItems() {
         return harnessItems;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        setBoundingBox(makeBoundingBox());
+    }
+
+    @Override
+    protected AABB makeBoundingBox() {
+        float yaw = getYRot();
+        double minX = Double.POSITIVE_INFINITY;
+        double minZ = Double.POSITIVE_INFINITY;
+        double maxX = Double.NEGATIVE_INFINITY;
+        double maxZ = Double.NEGATIVE_INFINITY;
+        double[][] corners = {
+                {HIT_HALF_X, HIT_FRONT},
+                {-HIT_HALF_X, HIT_FRONT},
+                {HIT_HALF_X, -HIT_REAR},
+                {-HIT_HALF_X, -HIT_REAR}
+        };
+        for(double[] corner : corners) {
+            Vec3 turned = rotateY(corner[0], 0, corner[1], yaw);
+            minX = Math.min(minX, turned.x);
+            maxX = Math.max(maxX, turned.x);
+            minZ = Math.min(minZ, turned.z);
+            maxZ = Math.max(maxZ, turned.z);
+        }
+        return new AABB(getX() + minX, getY(), getZ() + minZ, getX() + maxX, getY() + HIT_HEIGHT, getZ() + maxZ);
     }
 
     @Override

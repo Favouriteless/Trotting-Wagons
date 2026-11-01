@@ -3,15 +3,16 @@ package net.favouriteless.trotting_wagons.client.screens;
 import net.favouriteless.trotting_wagons.common.entities.wagons.KibitkaWagon;
 import net.favouriteless.trotting_wagons.common.init.TWItems;
 import net.favouriteless.trotting_wagons.common.network.packets.ToggleKibitkaCampPayload;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.time.Duration;
+import java.util.List;
 
 /** Painted house while camped. On the road the house is covered by the ordinary wheel. */
 public class KibitkaCampButton extends Button {
@@ -21,11 +22,12 @@ public class KibitkaCampButton extends Button {
     private final KibitkaWagon wagon;
     private final ItemStack wheel = new ItemStack(TWItems.WHEEL.get());
     private String shown = "";
+    private List<Component> lines = List.of();
+    private long hoverStart = -1L;
 
     public KibitkaCampButton(int x, int y, KibitkaWagon wagon) {
         super(x, y, SIZE, SIZE, Component.empty(), button -> PacketDistributor.sendToServer(new ToggleKibitkaCampPayload(wagon.getId())), DEFAULT_NARRATION);
         this.wagon = wagon;
-        setTooltipDelay(Duration.ofMillis(TooltipDelay.MILLIS));
     }
 
     @Override
@@ -41,10 +43,9 @@ public class KibitkaCampButton extends Button {
         if(!key.equals(shown)) {
             shown = key;
             setMessage(Component.translatable(action));
-            Component tooltip = settled
-                    ? Component.translatable(action).append("\n").append(Component.translatable(tip))
-                    : Component.translatable(tip);
-            setTooltip(Tooltip.create(tooltip));
+            lines = settled
+                    ? List.of(Component.translatable(action), Component.translatable(tip))
+                    : List.of(Component.translatable(tip));
         }
         if(!camped) {
             graphics.fill(getX() + 4, getY() + 4, getX() + 23, getY() + 21, 0xFF8B8B8B);
@@ -52,6 +53,15 @@ public class KibitkaCampButton extends Button {
         }
         if(!active)
             graphics.fill(RenderType.guiOverlay(), getX(), getY(), getX() + width, getY() + height, 0x88000000);
+        if(!isHovered()) {
+            hoverStart = -1L;
+            return;
+        }
+        if(hoverStart < 0)
+            hoverStart = Util.getMillis();
+        if(Util.getMillis() - hoverStart < TooltipDelay.MILLIS || lines.isEmpty())
+            return;
+        graphics.renderComponentTooltip(Minecraft.getInstance().font, lines, mouseX, mouseY);
     }
 
 }

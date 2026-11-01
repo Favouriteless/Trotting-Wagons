@@ -25,12 +25,18 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
 public class DebugWagon extends AbstractInventoryWagon {
 
     public static final int PUMPKIN_SLOTS = 4;
+    /** Cabin posts, driver seat, and floor. Wheels, tongue, and the lantern arm are outside. One pixel of slack. */
+    private static final double BODY_HALF_X = 23D / 16D;
+    private static final double BODY_FRONT = 32.25D / 16D;
+    private static final double BODY_REAR = 40.5D / 16D;
+    private static final double BODY_HEIGHT = 4.0D;
     /** Positive rotation swings the upright ladder outward. Negative folded it into the wagon. */
     public static final float LADDER_DROP = (float)Math.toRadians(130.0D);
     private static final int LADDER_TICKS = 40;
@@ -188,6 +194,7 @@ public class DebugWagon extends AbstractInventoryWagon {
     @Override
     public void tick() {
         super.tick();
+        setBoundingBox(makeBoundingBox());
         if(level().isClientSide) {
             tickLadderVisual();
             return;
@@ -195,6 +202,29 @@ public class DebugWagon extends AbstractInventoryWagon {
         tickLadder();
         if(tickCount % 10 == 0)
             updateLanternLight();
+    }
+
+    @Override
+    protected AABB makeBoundingBox() {
+        float yaw = getYRot();
+        double minX = Double.POSITIVE_INFINITY;
+        double minZ = Double.POSITIVE_INFINITY;
+        double maxX = Double.NEGATIVE_INFINITY;
+        double maxZ = Double.NEGATIVE_INFINITY;
+        double[][] corners = {
+                {BODY_HALF_X, BODY_FRONT},
+                {-BODY_HALF_X, BODY_FRONT},
+                {BODY_HALF_X, -BODY_REAR},
+                {-BODY_HALF_X, -BODY_REAR}
+        };
+        for(double[] corner : corners) {
+            Vec3 turned = rotateY(corner[0], 0, corner[1], yaw);
+            minX = Math.min(minX, turned.x);
+            maxX = Math.max(maxX, turned.x);
+            minZ = Math.min(minZ, turned.z);
+            maxZ = Math.max(maxZ, turned.z);
+        }
+        return new AABB(getX() + minX, getY(), getZ() + minZ, getX() + maxX, getY() + BODY_HEIGHT, getZ() + maxZ);
     }
 
     @Override

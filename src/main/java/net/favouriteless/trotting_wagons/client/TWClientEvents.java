@@ -13,7 +13,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.camel.Camel;
+import net.minecraft.world.entity.animal.horse.AbstractHorse;
+import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -33,6 +37,22 @@ public class TWClientEvents {
             GLFW.GLFW_KEY_R,
             "key.categories.trotting_wagons"
     );
+
+    @SubscribeEvent
+    public static void onRenderHarnessed(RenderLivingEvent.Pre<?, ?> event) {
+        if(!showHarnessed(event.getEntity()) || !(event.getEntity() instanceof Camel camel))
+            return;
+        camel.idleAnimationState.stop();
+        camel.sitAnimationState.stop();
+        camel.sitPoseAnimationState.stop();
+        camel.sitUpAnimationState.stop();
+        camel.dashAnimationState.stop();
+    }
+
+    private static boolean showHarnessed(LivingEntity entity) {
+        return entity instanceof Mob mob && (mob instanceof AbstractHorse || mob instanceof Camel)
+                && mob.isNoAi() && AbstractWagon.isHarnessed(mob);
+    }
 
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Post event) {

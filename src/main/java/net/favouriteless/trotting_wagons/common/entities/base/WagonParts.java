@@ -38,32 +38,12 @@ public final class WagonParts {
     private static final double WHEEL_R = 0.75D;
     private static final double WHEEL_WIDE_OUTER = 0.25D;
 
-    private static final List<Part> CONESTOGA = List.of(
-            wheel(0, 16, 7.15385D, -16),
-            wheel(1, -16, 7.15385D, -16),
-            wheel(2, 16, 8.5D, 17),
-            wheel(3, -16, 8.5D, 17)
-    );
-    private static final List<Part> ROYAL = List.of(
-            wheel(0, 17.75D, 10.5D, -21),
-            wheel(1, -17.75D, 10.5D, -21),
-            wheel(2, 17.75D, 10.5D, 21),
-            wheel(3, -17.75D, 10.5D, 21)
-    );
-    private static final List<Part> ARMORED = List.of(
-            wheel(0, 16, 8.5D, -17),
-            wheel(1, -16, 8.5D, -17),
-            wheel(2, 16, 8.5D, 17),
-            wheel(3, -16, 8.5D, 17)
-    );
+    private static final List<Part> CONESTOGA = conestogaParts();
+    private static final List<Part> ROYAL = royalParts();
+    private static final List<Part> ARMORED = armoredParts();
     private static final List<Part> DEBUG = debugParts();
     private static final List<Part> ANIMAL = animalParts();
-    private static final List<Part> LOG = List.of(
-            wheel(0, 19.25D, 9.5D, -17),
-            wheel(1, -18.75D, 9.5D, -17),
-            wheel(2, 19.75D, 9.5D, 21),
-            wheel(3, -19.75D, 9.5D, 21)
-    );
+    private static final List<Part> LOG = logParts();
     private static final List<Part> BARREL = barrelParts();
     private static final List<Part> PASSENGER = passengerParts();
     private static final List<Part> WARE = wareParts();
@@ -406,6 +386,46 @@ public final class WagonParts {
         return new Part(Kind.WHEEL, index, List.of(new AABB(
                 center.x - WHEEL_X, center.y - WHEEL_R, center.z - WHEEL_R,
                 center.x + WHEEL_X, center.y + WHEEL_R, center.z + WHEEL_R)));
+    }
+
+    private static List<Part> conestogaParts() {
+        List<Part> parts = new ArrayList<>();
+        parts.add(wheel(0, 16, 7.15385D, -16));
+        parts.add(wheel(1, -16, 7.15385D, -16));
+        parts.add(wheel(2, 16, 8.5D, 17));
+        parts.add(wheel(3, -16, 8.5D, 17));
+        parts.add(new Part(Kind.HARNESS, 0, List.of(plainBox(-16, 7.5D, -85, 32, 8, 57))));
+        return List.copyOf(parts);
+    }
+
+    private static List<Part> royalParts() {
+        List<Part> parts = new ArrayList<>();
+        parts.add(wheel(0, 17.75D, 10.5D, -21));
+        parts.add(wheel(1, -17.75D, 10.5D, -21));
+        parts.add(wheel(2, 17.75D, 10.5D, 21));
+        parts.add(wheel(3, -17.75D, 10.5D, 21));
+        parts.add(new Part(Kind.HARNESS, 0, List.of(plainBox(-16, 7.5D, -85, 32, 8, 57))));
+        return List.copyOf(parts);
+    }
+
+    private static List<Part> armoredParts() {
+        List<Part> parts = new ArrayList<>();
+        parts.add(wheel(0, 16, 8.5D, -17));
+        parts.add(wheel(1, -16, 8.5D, -17));
+        parts.add(wheel(2, 16, 8.5D, 17));
+        parts.add(wheel(3, -16, 8.5D, 17));
+        parts.add(new Part(Kind.HARNESS, 0, List.of(plainBox(-16, 7.5D, -85, 32, 8, 57))));
+        return List.copyOf(parts);
+    }
+
+    private static List<Part> logParts() {
+        List<Part> parts = new ArrayList<>();
+        parts.add(wheel(0, 19.25D, 9.5D, -17));
+        parts.add(wheel(1, -18.75D, 9.5D, -17));
+        parts.add(wheel(2, 19.75D, 9.5D, 21));
+        parts.add(wheel(3, -19.75D, 9.5D, 21));
+        parts.add(new Part(Kind.HARNESS, 0, List.of(plainBox(-16, 7.5D, -85, 32, 8, 57))));
+        return List.copyOf(parts);
     }
 
     private static List<Part> animalParts() {
