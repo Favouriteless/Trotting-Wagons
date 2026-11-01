@@ -192,7 +192,7 @@ public class SeatButton extends AbstractWidget {
 
         Occupant occupant = occupant();
         boolean locked = draftSide == null && wagon.isSeatLocked(seat)
-                && !(occupant.entity() instanceof Player && wagon.getSeat(seat).kind() == WagonSeat.Kind.UNIVERSAL);
+                && !(AbstractWagon.countsAsPlayer(occupant.entity()) && wagon.getSeat(seat).kind() == WagonSeat.Kind.UNIVERSAL);
         boolean blocked = draftSide == null && wagon.seatBlockHint(seat) != null;
         int color = active ? 0xFF8B8B8B : 0xFF5A5A5A;
         int x = getX();

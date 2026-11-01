@@ -143,16 +143,6 @@ public class LogWagon extends AbstractWagon implements MenuProvider {
     }
 
     @Override
-    protected double speedCoefficient() {
-        int count = cargoCount();
-        if(count <= 0)
-            return ServerConfig.INSTANCE.logSpeedEmpty.get();
-        if(count <= PARTIAL_LIMIT)
-            return ServerConfig.INSTANCE.logSpeedPartial.get();
-        return ServerConfig.INSTANCE.logSpeedFull.get();
-    }
-
-    @Override
     public WheelSag wheelSag() {
         int mask = getWheelMask() & 0x0F;
         int key = mask;
@@ -221,8 +211,27 @@ public class LogWagon extends AbstractWagon implements MenuProvider {
     }
 
     public void syncCargo() {
-        if(level() != null && !level().isClientSide)
-            entityData.set(DATA_CARGO, cargoCount());
+        if(level() == null || level().isClientSide)
+            return;
+        entityData.set(DATA_CARGO, cargoCount());
+        applyCargoSpeed();
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if(DATA_CARGO.equals(key))
+            applyCargoSpeed();
+    }
+
+    private void applyCargoSpeed() {
+        int count = level() != null && level().isClientSide ? syncedCargo() : cargoCount();
+        double speed = ServerConfig.INSTANCE.logSpeedFull.get();
+        if(count <= 0)
+            speed = ServerConfig.INSTANCE.logSpeedEmpty.get();
+        else if(count <= PARTIAL_LIMIT)
+            speed = ServerConfig.INSTANCE.logSpeedPartial.get();
+        setSpeedCoefficient(speed);
     }
 
     public void mergeSameKinds() {
@@ -252,6 +261,11 @@ public class LogWagon extends AbstractWagon implements MenuProvider {
     public int hitchSlots() {
         int slots = entityData.get(DATA_HARNESS);
         return slots < 0 ? 0 : Math.min(slots, 2);
+    }
+
+    @Override
+    protected double singleHarnessFactor() {
+        return 0.6D;
     }
 
     @Override

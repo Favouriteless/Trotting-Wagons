@@ -4,6 +4,7 @@ import net.favouriteless.trotting_wagons.TrottingWagons;
 import net.favouriteless.trotting_wagons.common.init.TWItems;
 import net.favouriteless.trotting_wagons.common.entities.wagons.AnimalWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.BarrelWagon;
+import net.favouriteless.trotting_wagons.common.entities.wagons.BigCartWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.ArmoredWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.ConestogaWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.DebugWagon;
@@ -48,6 +49,7 @@ public final class WagonParts {
     private static final List<Part> PASSENGER = passengerParts();
     private static final List<Part> WARE = wareParts();
     private static final List<Part> KIBITKA = kibitkaParts();
+    private static final List<Part> BIG_CART = bigCartParts();
 
     private WagonParts() {}
 
@@ -72,6 +74,8 @@ public final class WagonParts {
             return WARE;
         if(wagon instanceof KibitkaWagon)
             return KIBITKA;
+        if(wagon instanceof BigCartWagon)
+            return BIG_CART;
         return List.of();
     }
 
@@ -111,7 +115,8 @@ public final class WagonParts {
             case LANTERN -> wagon instanceof DebugWagon debug ? debug.hasLantern()
                     : wagon instanceof PassengerWagon passenger ? passenger.hasLantern(part.index())
                     : wagon instanceof WareWagon ware ? ware.hasLantern()
-                    : wagon instanceof KibitkaWagon kibitka && kibitka.hasLantern();
+                    : wagon instanceof KibitkaWagon kibitka ? kibitka.hasLantern()
+                    : wagon instanceof BigCartWagon big && big.hasLantern();
         };
     }
 
@@ -192,6 +197,8 @@ public final class WagonParts {
             if(wagon instanceof WareWagon ware && !ware.hasLantern())
                 return true;
             if(wagon instanceof KibitkaWagon kibitka && !kibitka.hasLantern())
+                return true;
+            if(wagon instanceof BigCartWagon big && !big.hasLantern())
                 return true;
         }
         ItemStackHandler harness = harnessOf(wagon);
@@ -290,6 +297,10 @@ public final class WagonParts {
                 kibitka.getLanternItems().setStackInSlot(0, one(player, stack));
                 return;
             }
+            if(wagon instanceof BigCartWagon big && !big.hasLantern()) {
+                big.getLanternItems().setStackInSlot(0, one(player, stack));
+                return;
+            }
         }
         ItemStackHandler harness = harnessOf(wagon);
         if(harness != null && TWItems.isHarness(stack) && harness.getStackInSlot(0).isEmpty() && !wagon.hasDraftAnimal()) {
@@ -335,6 +346,8 @@ public final class WagonParts {
                     yield takeSlot(ware.getLanternItems(), 0);
                 if(wagon instanceof KibitkaWagon kibitka)
                     yield takeSlot(kibitka.getLanternItems(), 0);
+                if(wagon instanceof BigCartWagon big)
+                    yield takeSlot(big.getLanternItems(), 0);
                 yield ItemStack.EMPTY;
             }
         };
@@ -489,6 +502,17 @@ public final class WagonParts {
         parts.add(wheel(3, -19.75D, 9.5D, 17));
         parts.add(new Part(Kind.LANTERN, 0, List.of(plainBox(-3, 36.1D, -39, 6, 7, 6))));
         parts.add(new Part(Kind.HARNESS, 0, List.of(plainBox(-16, 7.5D, -85, 32, 8, 57))));
+        return List.copyOf(parts);
+    }
+
+    private static List<Part> bigCartParts() {
+        List<Part> parts = new ArrayList<>();
+        parts.add(wheel(0, 24.25D, 9.5D, -21));
+        parts.add(wheel(1, -23.75D, 9.5D, -21));
+        parts.add(wheel(2, 24.75D, 9.5D, 27));
+        parts.add(wheel(3, -24.75D, 9.5D, 27));
+        parts.add(new Part(Kind.LANTERN, 0, List.of(plainBox(-23.5D, 29.6D, -29.3D, 6, 9, 6))));
+        parts.add(new Part(Kind.HARNESS, 0, List.of(plainBox(-16, 7.5D, -88, 32, 10, 64))));
         return List.copyOf(parts);
     }
 

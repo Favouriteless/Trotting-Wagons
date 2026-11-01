@@ -7,6 +7,7 @@ import net.favouriteless.trotting_wagons.common.menus.AnimalMenu;
 import net.favouriteless.trotting_wagons.common.menus.ArmoredMenu;
 import net.favouriteless.trotting_wagons.common.menus.BannerSlot;
 import net.favouriteless.trotting_wagons.common.menus.BarrelMenu;
+import net.favouriteless.trotting_wagons.common.menus.BigCartMenu;
 import net.favouriteless.trotting_wagons.common.menus.BarrelSlot;
 import net.favouriteless.trotting_wagons.common.menus.ChestSlot;
 import net.favouriteless.trotting_wagons.common.menus.ConestogaMenu;
@@ -173,6 +174,8 @@ final class WagonGui {
             return royal.getWagon();
         if(menu instanceof ConestogaMenu conestoga)
             return conestoga.getWagon();
+        if(menu instanceof BigCartMenu bigCart)
+            return bigCart.getWagon();
         return null;
     }
 

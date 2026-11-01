@@ -5,6 +5,7 @@ import net.favouriteless.trotting_wagons.client.render.WagonItemRenderer;
 import net.favouriteless.trotting_wagons.client.render.entity.WagonRenderer;
 import net.favouriteless.trotting_wagons.client.screens.AnimalScreen;
 import net.favouriteless.trotting_wagons.client.screens.BarrelScreen;
+import net.favouriteless.trotting_wagons.client.screens.BigCartScreen;
 import net.favouriteless.trotting_wagons.client.screens.ArmoredScreen;
 import net.favouriteless.trotting_wagons.client.screens.ConestogaScreen;
 import net.favouriteless.trotting_wagons.client.screens.DebugScreen;
@@ -45,6 +46,7 @@ public class ClientSetupEvents {
         event.registerItem(wagonExtension(TWEntityTypes.PASSENGER_WAGON.get()), TWItems.PASSENGER_WAGON.get());
         event.registerItem(wagonExtension(TWEntityTypes.WARE_WAGON.get()), TWItems.WARE_WAGON.get());
         event.registerItem(wagonExtension(TWEntityTypes.KIBITKA_WAGON.get()), TWItems.KIBITKA_WAGON.get());
+        event.registerItem(wagonExtension(TWEntityTypes.BIG_CART_WAGON.get()), TWItems.BIG_CART_WAGON.get());
     }
 
     @SubscribeEvent
@@ -59,6 +61,7 @@ public class ClientSetupEvents {
         event.register(TWMenuTypes.PASSENGER.get(), PassengerScreen::new);
         event.register(TWMenuTypes.WARE.get(), WareScreen::new);
         event.register(TWMenuTypes.KIBITKA.get(), KibitkaScreen::new);
+        event.register(TWMenuTypes.BIG_CART.get(), BigCartScreen::new);
     }
 
     @SubscribeEvent
@@ -78,6 +81,7 @@ public class ClientSetupEvents {
         event.registerEntityRenderer(TWEntityTypes.PASSENGER_WAGON.get(), context -> new WagonRenderer<>(context, TrottingWagons.id("passenger_wagon")));
         event.registerEntityRenderer(TWEntityTypes.WARE_WAGON.get(), context -> new WagonRenderer<>(context, TrottingWagons.id("ware_wagon")));
         event.registerEntityRenderer(TWEntityTypes.KIBITKA_WAGON.get(), context -> new WagonRenderer<>(context, TrottingWagons.id("kibitka_wagon")));
+        event.registerEntityRenderer(TWEntityTypes.BIG_CART_WAGON.get(), context -> new WagonRenderer<>(context, TrottingWagons.id("big_cart")));
     }
 
     public static IClientItemExtensions wagonExtension(EntityType<? extends AbstractWagon> entityType) {

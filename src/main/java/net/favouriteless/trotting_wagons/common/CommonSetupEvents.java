@@ -38,6 +38,7 @@ public class CommonSetupEvents {
         event.registerEntity(ItemHandler.ENTITY, TWEntityTypes.ROYAL_WAGON.get(), AbstractInventoryWagon::getItemCapability);
         event.registerEntity(ItemHandler.ENTITY, TWEntityTypes.DEBUG_WAGON.get(), AbstractInventoryWagon::getItemCapability);
         event.registerEntity(ItemHandler.ENTITY, TWEntityTypes.LOG_WAGON.get(), LogWagon::getItemCapability);
+        event.registerEntity(ItemHandler.ENTITY, TWEntityTypes.BIG_CART_WAGON.get(), AbstractInventoryWagon::getItemCapability);
     }
 
     @SubscribeEvent

@@ -180,12 +180,6 @@ public class WareWagon extends AbstractWagon implements MenuProvider {
     }
 
     @Override
-    protected double speedCoefficient() {
-        double speed = ServerConfig.INSTANCE.wareSpeedEmpty.get() - chestCount() * ServerConfig.INSTANCE.wareSpeedPerChest.get();
-        return Math.max(0, speed);
-    }
-
-    @Override
     protected double tongueLength() {
         return 57D / 16D;
     }
@@ -207,6 +201,11 @@ public class WareWagon extends AbstractWagon implements MenuProvider {
     public int hitchSlots() {
         int slots = entityData.get(DATA_HARNESS);
         return slots < 0 ? 0 : Math.min(slots, 2);
+    }
+
+    @Override
+    protected double singleHarnessFactor() {
+        return 0.6D;
     }
 
     @Override
@@ -478,6 +477,19 @@ public class WareWagon extends AbstractWagon implements MenuProvider {
                 mask |= 1 << i;
         }
         entityData.set(DATA_CHESTS, mask);
+        applyCargoSpeed();
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if(DATA_CHESTS.equals(key))
+            applyCargoSpeed();
+    }
+
+    private void applyCargoSpeed() {
+        double speed = ServerConfig.INSTANCE.wareSpeedEmpty.get() - chestCount() * ServerConfig.INSTANCE.wareSpeedPerChest.get();
+        setSpeedCoefficient(Math.max(0, speed));
     }
 
     private void syncLantern() {

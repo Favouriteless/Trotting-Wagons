@@ -98,6 +98,11 @@ public class AnimalWagon extends AbstractWagon implements MenuProvider {
     }
 
     @Override
+    protected double singleHarnessFactor() {
+        return 0.8D;
+    }
+
+    @Override
     protected Vec3 hitchOffset(Side side) {
         if(hitchSlots() >= 2)
             return super.hitchOffset(side);

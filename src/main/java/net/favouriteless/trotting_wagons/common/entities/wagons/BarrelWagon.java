@@ -115,6 +115,11 @@ public class BarrelWagon extends AbstractWagon implements MenuProvider {
     }
 
     @Override
+    protected double singleHarnessFactor() {
+        return 0.6D;
+    }
+
+    @Override
     protected Vec3 hitchOffset(Side side) {
         if(hitchSlots() >= 2)
             return super.hitchOffset(side);
@@ -157,15 +162,7 @@ public class BarrelWagon extends AbstractWagon implements MenuProvider {
         return count;
     }
 
-    @Override
-    protected double speedCoefficient() {
-        int count = barrelCount();
-        if(count <= 0)
-            return ServerConfig.INSTANCE.barrelSpeedEmpty.get();
-        if(count <= PARTIAL_LIMIT)
-            return ServerConfig.INSTANCE.barrelSpeedPartial.get();
-        return ServerConfig.INSTANCE.barrelSpeedFull.get();
-    }
+
 
     /**
      * One remaining wheel, and a diagonal pair, settle onto the frame.
@@ -270,6 +267,24 @@ public class BarrelWagon extends AbstractWagon implements MenuProvider {
                 mask |= 1 << i;
         }
         entityData.set(DATA_BARRELS, mask);
+        applyCargoSpeed();
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if(DATA_BARRELS.equals(key))
+            applyCargoSpeed();
+    }
+
+    private void applyCargoSpeed() {
+        int count = barrelCount();
+        double speed = ServerConfig.INSTANCE.barrelSpeedFull.get();
+        if(count <= 0)
+            speed = ServerConfig.INSTANCE.barrelSpeedEmpty.get();
+        else if(count <= PARTIAL_LIMIT)
+            speed = ServerConfig.INSTANCE.barrelSpeedPartial.get();
+        setSpeedCoefficient(speed);
     }
 
     @Override

@@ -38,6 +38,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -108,7 +109,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
     /** Saves below this stored the driver's right-hand animal in {@code leftHorse}. */
     private static final byte HITCH_SIDES = 1;
 
-    private final double speedCoefficient;
+    private double speedCoefficient;
     private final float turnRate;
     private final int maxHealth;
 
@@ -200,6 +201,11 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
 
     protected double speedCoefficient() {
         return speedCoefficient;
+    }
+
+    /** Cargo wagons call this when a barrel, chest, or log stack changes, not from the movement tick. */
+    protected void setSpeedCoefficient(double speedCoefficient) {
+        this.speedCoefficient = speedCoefficient;
     }
 
     private static Vec3[] seatPositions(WagonSeat[] seats) {
@@ -451,7 +457,18 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         if(hasWideWheel())
             speed *= WIDE_WHEEL_FACTOR;
         speed *= groundSpeedFactor();
+        speed *= harnessSpeedFactor();
         return speed;
+    }
+
+    /** Two-animal shafts stay at 1. A single tongue multiplies the finished speed. */
+    private double harnessSpeedFactor() {
+        return hitchSlots() == 1 ? singleHarnessFactor() : 1.0D;
+    }
+
+    /** Оглобли, bone TongueSingle. Дышло is always 1. Kibitka and the big cart stay at 1. */
+    protected double singleHarnessFactor() {
+        return 1.0D;
     }
 
     private double groundSpeedFactor() {
@@ -549,7 +566,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
                 return InteractionResult.sidedSuccess(isClientSide);
             }
 
-            if(TrottingWagons.DYE_ITEMS.containsKey(item)) {
+            if(acceptsDye() && TrottingWagons.DYE_ITEMS.containsKey(item)) {
                 setColor(TrottingWagons.DYE_ITEMS.get(item));
                 return InteractionResult.sidedSuccess(isClientSide);
             }
@@ -1200,6 +1217,11 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
 
     protected DyeColor getDefaultColor() {
         return DyeColor.WHITE;
+    }
+
+    /** One texture and no dye sheets. Shift-click with a dye then falls through to part removal. */
+    protected boolean acceptsDye() {
+        return true;
     }
 
     public float getHealth() {
@@ -1933,19 +1955,20 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         if(entity.getType().is(TrottingWagons.CANNOT_MOUNT_WAGON))
             return false;
         boolean harnessedHere = harnesses(entity);
-        if(!(entity instanceof Player) && (harnessedHere || isHarnessed(entity)) && !(manual && harnessedHere))
+        if(!countsAsPlayer(entity) && (harnessedHere || isHarnessed(entity)) && !(manual && harnessedHere))
             return false;
         WagonSeat seat = seats[index];
-        boolean player = entity instanceof Player;
-        if(seatLocked[index] && !player && seat.canLockAnimals())
+        boolean person = countsAsPlayer(entity);
+        if(seatLocked[index] && !person && seat.canLockAnimals())
             return false;
-        if(!player && isLargePassenger(entity) && seat.kind() != WagonSeat.Kind.ANIMALBIG)
+        if(!person && isLargePassenger(entity) && seat.kind() != WagonSeat.Kind.ANIMALBIG)
             return false;
         boolean accepted = switch(seat.kind()) {
-            case DRIVER, PLAYER -> player;
-            case ANIMAL -> !player;
+            case DRIVER -> entity instanceof Player;
+            case PLAYER -> person;
+            case ANIMAL -> !person;
             case UNIVERSAL -> true;
-            case ANIMALBIG -> !player && acceptsLargeSeat(entity);
+            case ANIMALBIG -> !person && acceptsLargeSeat(entity);
             case DRAFT -> false;
         };
         return accepted && seatOpen(index, entity);
@@ -1961,6 +1984,11 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
      */
     protected boolean seatOpen(int index, Entity entity) {
         return true;
+    }
+
+    /** A villager or wandering trader takes a passenger seat, not an animal seat. Only a real player may drive. */
+    public static boolean countsAsPlayer(Entity entity) {
+        return entity instanceof Player || entity instanceof AbstractVillager;
     }
 
     protected static boolean isLargePassenger(Entity entity) {

@@ -129,6 +129,11 @@ public class DebugWagon extends AbstractInventoryWagon {
     }
 
     @Override
+    protected double singleHarnessFactor() {
+        return 0.8D;
+    }
+
+    @Override
     protected float diagonalPitch() {
         return -8F;
     }

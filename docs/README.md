@@ -2,7 +2,7 @@
 
 Описание текущего кода ветки `dev`, Minecraft 1.21.1, NeoForge. Имена предметов, сущностей, ключей конфига и тегов даны как в исходниках. Числа сняты с кода, включая расхождения между ключом конфига и тем, что конструктор реально читает.
 
-Мод: `trotting_wagons`, отображаемое имя Trotting Wagons Extended, `mod_version` 2.0.0. Файл конфига: `config/trotting_wagons-server.toml`. Сторона в `neoforge.mods.toml` — `BOTH`: мод стоит и на сервере, и на каждом клиенте.
+Мод: `trotting_wagons`, отображаемое имя Trotting Wagons Extended, `mod_version` 0.9.0. Файл конфига: `config/trotting_wagons-server.toml`. Сторона в `neoforge.mods.toml` — `BOTH`: мод стоит и на сервере, и на каждом клиенте.
 
 | Файл | Содержание |
 | --- | --- |
@@ -17,3 +17,4 @@
 | [passenger.md](passenger.md) | `passenger_wagon` |
 | [ware.md](ware.md) | `ware_wagon` |
 | [kibitka.md](kibitka.md) | `kibitka_wagon` |
+| [big_cart.md](big_cart.md) | `big_cart` |

@@ -4,6 +4,7 @@ import net.favouriteless.trotting_wagons.TrottingWagons;
 import net.favouriteless.trotting_wagons.common.entities.base.AbstractWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.AnimalWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.BarrelWagon;
+import net.favouriteless.trotting_wagons.common.entities.wagons.BigCartWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.ConestogaWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.DebugWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.KibitkaWagon;
@@ -30,7 +31,7 @@ public class WagonModel<T extends AbstractWagon> extends DefaultedEntityGeoModel
 
     @Override
     public ResourceLocation getTextureResource(T wagon) {
-        if(wagon instanceof DebugWagon || wagon instanceof AnimalWagon || wagon instanceof LogWagon || wagon instanceof BarrelWagon || wagon instanceof PassengerWagon || wagon instanceof WareWagon || wagon instanceof KibitkaWagon)
+        if(wagon instanceof DebugWagon || wagon instanceof AnimalWagon || wagon instanceof LogWagon || wagon instanceof BarrelWagon || wagon instanceof PassengerWagon || wagon instanceof WareWagon || wagon instanceof KibitkaWagon || wagon instanceof BigCartWagon)
             return TrottingWagons.id(texturePathPrefix + "none.png");
         DyeColor color = wagon.getColor();
         return TrottingWagons.id(texturePathPrefix + (color != null ? color.getName() : "none") + ".png");
@@ -50,9 +51,11 @@ public class WagonModel<T extends AbstractWagon> extends DefaultedEntityGeoModel
         spinAxle(processor, "RearWheels_Wide", -rot);
         spinAxle(processor, "FrontWheels_Iron", -rot);
         spinAxle(processor, "RearWheels_Iron", -rot);
+        spinAxle(processor, "FrontIronWheels", -rot);
+        spinAxle(processor, "RearIronWheels", -rot);
         spinAxle(processor, "FrontAxis", -rot);
         spinAxle(processor, "RearAxis", -rot);
-        if(wagon instanceof DebugWagon || wagon instanceof AnimalWagon || wagon instanceof LogWagon || wagon instanceof BarrelWagon || wagon instanceof PassengerWagon || wagon instanceof WareWagon || wagon instanceof KibitkaWagon)
+        if(wagon instanceof DebugWagon || wagon instanceof AnimalWagon || wagon instanceof LogWagon || wagon instanceof BarrelWagon || wagon instanceof PassengerWagon || wagon instanceof WareWagon || wagon instanceof KibitkaWagon || wagon instanceof BigCartWagon)
             hideWheelVariants(processor, wagon, DEBUG_WHEEL_VARIANTS);
         else if(wagon instanceof ConestogaWagon)
             hideWheelVariants(processor, wagon, CONESTOGA_WHEEL_VARIANTS);
@@ -74,6 +77,8 @@ public class WagonModel<T extends AbstractWagon> extends DefaultedEntityGeoModel
             hideWare(processor, wareWagon);
         if(wagon instanceof KibitkaWagon kibitka)
             poseKibitka(processor, kibitka, partialTick);
+        if(wagon instanceof BigCartWagon bigCart)
+            hideBone(processor, "Lamp", !bigCart.hasLantern());
 
         AbstractWagon.WheelSag sag = wagon.wheelSag();
         float bodyPitch = wagon.getXRot(partialTick) + sag.pitch();
@@ -131,16 +136,16 @@ public class WagonModel<T extends AbstractWagon> extends DefaultedEntityGeoModel
             {"bone2", "RightRearWheel2", "RightRearWheel3"}
     };
     private static final String[][] ROYAL_WHEEL_VARIANTS = {
-            {"octagon2", "LeftFrontWheel2", "LeftFrontWheel3"},
-            {"octagon", "RightFrontWheel2", "RightFrontWheel3"},
-            {"octagon4", "LeftRearWheel2", "LeftRearWheel3"},
-            {"octagon3", "RightRearWheel2", "RightRearWheel3"}
+            {"octagon2", "LeftFrontWheel2", "octagon5"},
+            {"octagon", "RightFrontWheel2", "octagon6"},
+            {"octagon4", "LeftFrontWheel3", "octagon9"},
+            {"octagon3", "RightFrontWheel3", "octagon10"}
     };
     private static final String[][] ARMORED_WHEEL_VARIANTS = {
-            {"LeftFrontWheel", "LeftFrontWheel2", "LeftFrontWheel3"},
-            {"RightFrontWheel", "RightFrontWheel2", "RightFrontWheel3"},
-            {"LeftRearWheel", "LeftRearWheel2", "LeftRearWheel3"},
-            {"RightRearWheel", "RightRearWheel2", "RightRearWheel3"}
+            {"bone3", "LeftFrontWheel2", "LeftFrontWheel3"},
+            {"bone4", "RightFrontWheel2", "RightFrontWheel3"},
+            {"bone", "LeftRearWheel2", "LeftRearWheel3"},
+            {"bone2", "RightRearWheel2", "RightRearWheel3"}
     };
     private static final String[][] DEBUG_WHEEL_VARIANTS = {
             {"LeftFrontWheel", "LeftFrontWheel2", "LeftFrontWheel3"},

@@ -28,6 +28,7 @@ public class TWItems {
     public static final DeferredHolder<Item, WagonItem> PASSENGER_WAGON = REGISTRY.register("passenger_wagon", () -> new WagonItem(TWEntityTypes.PASSENGER_WAGON::get, wagonProps()));
     public static final DeferredHolder<Item, WagonItem> WARE_WAGON = REGISTRY.register("ware_wagon", () -> new WagonItem(TWEntityTypes.WARE_WAGON::get, wagonProps()));
     public static final DeferredHolder<Item, WagonItem> KIBITKA_WAGON = REGISTRY.register("kibitka_wagon", () -> new WagonItem(TWEntityTypes.KIBITKA_WAGON::get, wagonProps()));
+    public static final DeferredHolder<Item, WagonItem> BIG_CART_WAGON = REGISTRY.register("big_cart", () -> new WagonItem(TWEntityTypes.BIG_CART_WAGON::get, wagonProps()));
 
     public static final DeferredHolder<Item, HorseWhipItem> HORSE_WHIP = REGISTRY.register("horse_whip", () -> new HorseWhipItem(new Properties().stacksTo(1)));
     /** One animal. The model bone is TongueSingle. */

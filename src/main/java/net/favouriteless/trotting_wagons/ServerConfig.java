@@ -71,6 +71,11 @@ public class ServerConfig {
     public final DoubleValue kibitkaAcceleration;
     public final DoubleValue kibitkaTurnRate;
 
+    public final IntValue bigCartHealth;
+    public final DoubleValue bigCartSpeed;
+    public final DoubleValue bigCartAcceleration;
+    public final DoubleValue bigCartTurnRate;
+
     public ServerConfig(Builder builder) {
         this.allowedEntities = builder.comment("EntityTypes allowed to pull wagons").defineList("allowed_entities", List.of(
                 "minecraft:horse"
@@ -107,9 +112,9 @@ public class ServerConfig {
         builder.pop();
         builder.push("Log Wagon Options");
         this.logHealth = builder.comment("Maximum health").defineInRange("log_wagon_health", 80, 0, Integer.MAX_VALUE);
-        this.logSpeedEmpty = builder.comment("Speed coefficient at 0 items, from 0 to 1.").defineInRange("log_wagon_speed_empty", 1.0D, 0.0D, 1.0D);
-        this.logSpeedPartial = builder.comment("Speed coefficient from 1 to 1000 items, from 0 to 1.").defineInRange("log_wagon_speed_partial", 0.9D, 0.0D, 1.0D);
-        this.logSpeedFull = builder.comment("Speed coefficient above 1000 items, from 0 to 1.").defineInRange("log_wagon_speed_full", 0.8D, 0.0D, 1.0D);
+        this.logSpeedEmpty = builder.comment("Speed coefficient at 0 items, from 0 to 1. Applied when the cargo changes.").defineInRange("log_wagon_speed_empty", 1.0D, 0.0D, 1.0D);
+        this.logSpeedPartial = builder.comment("Speed coefficient from 1 to 1000 items, from 0 to 1. Applied when the cargo changes.").defineInRange("log_wagon_speed_partial", 0.9D, 0.0D, 1.0D);
+        this.logSpeedFull = builder.comment("Speed coefficient above 1000 items, from 0 to 1. Applied when the cargo changes.").defineInRange("log_wagon_speed_full", 0.8D, 0.0D, 1.0D);
         this.logAcceleration = builder.comment("Unused. Acceleration is the current speed coefficient, in blocks per second per second.").defineInRange("log_wagon_acceleration", 3.0D, 0.0D, Double.MAX_VALUE);
         this.logTurnRate = builder.comment("Turn rate").defineInRange("log_wagon_turn_rate", 2.0D, 0.0D, Double.MAX_VALUE);
         builder.pop();
@@ -139,6 +144,12 @@ public class ServerConfig {
         this.kibitkaSpeed = builder.comment("Speed coefficient, from 0 to 1.").defineInRange("kibitka_wagon_speed_coefficient", 0.9D, 0.0D, 1.0D);
         this.kibitkaAcceleration = builder.comment("Unused. Acceleration is the speed coefficient, in blocks per second per second.").defineInRange("kibitka_wagon_acceleration", 3.0D, 0.0D, Double.MAX_VALUE);
         this.kibitkaTurnRate = builder.comment("Turn rate").defineInRange("kibitka_wagon_turn_rate", 2.0D, 0.0D, Double.MAX_VALUE);
+        builder.pop();
+        builder.push("Big Cart Options");
+        this.bigCartHealth = builder.comment("Maximum health").defineInRange("big_cart_health", 60, 0, Integer.MAX_VALUE);
+        this.bigCartSpeed = builder.comment("Speed coefficient, from 0 to 1. Maximum speed is the slowest hitched animal times this value.").defineInRange("big_cart_speed_coefficient", 1.0D, 0.0D, 1.0D);
+        this.bigCartAcceleration = builder.comment("Unused. Acceleration is the speed coefficient, in blocks per second per second.").defineInRange("big_cart_acceleration", 2.0D, 0.0D, Double.MAX_VALUE);
+        this.bigCartTurnRate = builder.comment("Turn rate").defineInRange("big_cart_turn_rate", 2.0D, 0.0D, Double.MAX_VALUE);
         builder.pop();
     }
 
