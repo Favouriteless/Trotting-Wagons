@@ -115,6 +115,22 @@
 					]
 				},
 				{
+					"name": "FrontAxis",
+					"parent": "cart",
+					"pivot": [14, 7.5, -17],
+					"cubes": [
+						{"origin": [-15, 7.5, -18], "size": [30, 2, 2], "uv": [300, 0]}
+					]
+				},
+				{
+					"name": "RearAxis",
+					"parent": "cart",
+					"pivot": [14, 7.5, 17],
+					"cubes": [
+						{"origin": [-15, 7.5, 16], "size": [30, 2, 2], "uv": [168, 129]}
+					]
+				},
+				{
 					"name": "Tongue",
 					"parent": "Wagon",
 					"pivot": [0, 10, -24.88461],
@@ -154,34 +170,13 @@
 					]
 				},
 				{
-					"name": "RearAxis",
-					"parent": "Wagon",
-					"pivot": [0, 8.5, 17],
-					"cubes": [
-						{"origin": [-15, 7.5, 16], "size": [30, 2, 2], "uv": [168, 129]}
-					]
-				},
-				{
-					"name": "FrontAxis",
-					"parent": "Wagon",
-					"pivot": [0, 8.5, -17],
-					"cubes": [
-						{"origin": [-15, 7.5, -18], "size": [30, 2, 2], "uv": [300, 0]}
-					]
-				},
-				{
-					"name": "FrontWheels",
+					"name": "NormalFrontWheels",
 					"parent": "Wagon",
 					"pivot": [0, 8.5, -17]
 				},
 				{
-					"name": "wheels",
-					"parent": "FrontWheels",
-					"pivot": [-16, 7.15385, -16]
-				},
-				{
-					"name": "bone3",
-					"parent": "wheels",
+					"name": "NormalLeftFrontWheel",
+					"parent": "NormalFrontWheels",
 					"pivot": [16, 8.5, -17],
 					"cubes": [
 						{"origin": [15, 0, -20.5], "size": [2, 1, 7], "pivot": [16, 8.5, -17], "rotation": [135, 0, 0], "uv": [42, 318]},
@@ -202,8 +197,8 @@
 					]
 				},
 				{
-					"name": "bone4",
-					"parent": "wheels",
+					"name": "NormalRightFrontWheel",
+					"parent": "NormalFrontWheels",
 					"pivot": [-16, 8.5, -17],
 					"cubes": [
 						{"origin": [-17, 0, -20.5], "size": [2, 1, 7], "pivot": [-16, 8.5, -17], "rotation": [135, 0, 0], "uv": [114, 323]},
@@ -224,13 +219,13 @@
 					]
 				},
 				{
-					"name": "RearWheels",
+					"name": "NormalRearWheels",
 					"parent": "Wagon",
 					"pivot": [0, 8.5, 17]
 				},
 				{
-					"name": "bone",
-					"parent": "RearWheels",
+					"name": "NormalLeftRearWheel",
+					"parent": "NormalRearWheels",
 					"pivot": [16, 8.5, 17],
 					"cubes": [
 						{"origin": [15, 0, 13.5], "size": [2, 1, 7], "pivot": [16, 8.5, 17], "rotation": [-135, 0, 0], "uv": [58, 310]},
@@ -251,8 +246,8 @@
 					]
 				},
 				{
-					"name": "bone2",
-					"parent": "RearWheels",
+					"name": "NormalRightRearWheel",
+					"parent": "NormalRearWheels",
 					"pivot": [-16, 8.5, 17],
 					"cubes": [
 						{"origin": [-17, 0, 13.5], "size": [2, 1, 7], "pivot": [-16, 8.5, 17], "rotation": [-135, 0, 0], "uv": [316, 87]},
@@ -273,13 +268,13 @@
 					]
 				},
 				{
-					"name": "FrontWheels_Wide",
+					"name": "WideFrontWheels",
 					"parent": "Wagon",
 					"pivot": [0, 8.5, -17]
 				},
 				{
-					"name": "LeftFrontWheel2",
-					"parent": "FrontWheels_Wide",
+					"name": "WideLeftFrontWheel",
+					"parent": "WideFrontWheels",
 					"pivot": [20.25, 8.5, -17],
 					"cubes": [
 						{"origin": [18.4, -1, -21], "size": [6, 2, 8], "pivot": [21.4, 8.5, -17], "rotation": [-135, 0, 0], "uv": [135, 478]},
@@ -307,8 +302,8 @@
 					]
 				},
 				{
-					"name": "RightFrontWheel2",
-					"parent": "FrontWheels_Wide",
+					"name": "WideRightFrontWheel",
+					"parent": "WideFrontWheels",
 					"pivot": [-19.75, 8.5, -17],
 					"cubes": [
 						{"origin": [-24.4, -1, -21], "size": [6, 2, 8], "pivot": [-21.4, 8.5, -17], "rotation": [-135, 180, 0], "uv": [135, 478]},
@@ -336,13 +331,13 @@
 					]
 				},
 				{
-					"name": "RearWheels_Wide",
+					"name": "WideRearWheels",
 					"parent": "Wagon",
 					"pivot": [0, 8.5, 17]
 				},
 				{
-					"name": "RightRearWheel2",
-					"parent": "RearWheels_Wide",
+					"name": "WideRightRearWheel",
+					"parent": "WideRearWheels",
 					"pivot": [-21.75, 8.5, 17],
 					"cubes": [
 						{"origin": [-25.4, -1, 13], "size": [6, 2, 8], "pivot": [-22.4, 8.5, 17], "rotation": [-135, 180, 0], "uv": [135, 478]},
@@ -370,8 +365,8 @@
 					]
 				},
 				{
-					"name": "LeftRearWheel2",
-					"parent": "RearWheels_Wide",
+					"name": "WideLeftRearWheel",
+					"parent": "WideRearWheels",
 					"pivot": [21.75, 8.5, 17],
 					"cubes": [
 						{"origin": [19.4, -1, 13], "size": [6, 2, 8], "pivot": [22.4, 8.5, 17], "rotation": [-135, 0, 0], "uv": [135, 478]},
@@ -399,13 +394,13 @@
 					]
 				},
 				{
-					"name": "FrontWheels_Iron",
+					"name": "IronFrontWheels",
 					"parent": "Wagon",
 					"pivot": [0, 8.5, -17]
 				},
 				{
-					"name": "LeftFrontWheel3",
-					"parent": "FrontWheels_Iron",
+					"name": "IronLeftFrontWheel",
+					"parent": "IronFrontWheels",
 					"pivot": [16.25, 8.5, -17],
 					"cubes": [
 						{"origin": [15, 0, -21], "size": [2, 1, 8], "pivot": [16, 8.5, -17], "rotation": [-135, 0, 0], "uv": [27, 411]},
@@ -427,8 +422,8 @@
 					]
 				},
 				{
-					"name": "RightFrontWheel3",
-					"parent": "FrontWheels_Iron",
+					"name": "IronRightFrontWheel",
+					"parent": "IronFrontWheels",
 					"pivot": [-15.75, 8.5, -17],
 					"cubes": [
 						{"origin": [-17, 0, -21], "size": [2, 1, 8], "pivot": [-16, 8.5, -17], "rotation": [-135, 0, 0], "uv": [37, 417]},
@@ -450,13 +445,13 @@
 					]
 				},
 				{
-					"name": "RearWheels_Iron",
+					"name": "IronRearWheels",
 					"parent": "Wagon",
 					"pivot": [0, 8.5, 17]
 				},
 				{
-					"name": "RightRearWheel3",
-					"parent": "RearWheels_Iron",
+					"name": "IronRightRearWheel",
+					"parent": "IronRearWheels",
 					"pivot": [-15.75, 8.5, 17],
 					"cubes": [
 						{"origin": [-17, 0, 13], "size": [2, 1, 8], "pivot": [-16, 8.5, 17], "rotation": [-135, 0, 0], "uv": [30, 407]},
@@ -478,8 +473,8 @@
 					]
 				},
 				{
-					"name": "LeftRearWheel3",
-					"parent": "RearWheels_Iron",
+					"name": "IronLeftRearWheel",
+					"parent": "IronRearWheels",
 					"pivot": [15.75, 8.5, 17],
 					"cubes": [
 						{"origin": [15, 0, 13], "size": [2, 1, 8], "pivot": [16, 8.5, 17], "rotation": [-135, 0, 0], "uv": [31, 410]},

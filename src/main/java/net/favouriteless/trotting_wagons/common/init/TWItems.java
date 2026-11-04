@@ -1,6 +1,7 @@
 package net.favouriteless.trotting_wagons.common.init;
 
 import net.favouriteless.trotting_wagons.TrottingWagons;
+import net.favouriteless.trotting_wagons.common.items.ChassisItem;
 import net.favouriteless.trotting_wagons.common.items.HorseWhipItem;
 import net.favouriteless.trotting_wagons.common.items.WagonItem;
 import net.favouriteless.trotting_wagons.common.items.WheelItem;
@@ -38,6 +39,8 @@ public class TWItems {
     public static final DeferredHolder<Item, WheelItem> WHEEL = REGISTRY.register("wheel", () -> new WheelItem(new Properties().durability(100)));
     public static final DeferredHolder<Item, WheelItem> WIDE_WHEEL = REGISTRY.register("wide_wheel", () -> new WheelItem(new Properties().durability(100)));
     public static final DeferredHolder<Item, WheelItem> REINFORCED_WHEEL = REGISTRY.register("reinforced_wheel", () -> new WheelItem(new Properties().durability(300)));
+    public static final DeferredHolder<Item, Item> LONG_STICK = REGISTRY.register("long_stick", () -> new Item(new Properties()));
+    public static final DeferredHolder<Item, ChassisItem> CHASSIS = REGISTRY.register("chassis", () -> new ChassisItem(new Properties()));
 
     public static boolean isHarness(ItemStack stack) {
         return stack.is(TONGUE.get()) || stack.is(SHAFTS.get());

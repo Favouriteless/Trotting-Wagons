@@ -61,10 +61,25 @@ repositories {
 			includeGroup("software.bernie.geckolib")
 		}
 	}
+	exclusiveContent {
+		forRepository { maven { url = 'https://maven.sighs.cc/repository/maven-public/' } }
+		filter {
+			includeModule('com.kltyton', 'bonehitboxlib-common-1.21.1')
+			includeModule('com.kltyton', 'bonehitboxlib-neoforge-1.21.1')
+		}
+	}
+	exclusiveContent {
+		forRepository { maven { url = 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/' } }
+		filter {
+			includeGroup('fuzs.forgeconfigapiport')
+		}
+	}
 }
 
 dependencies {
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+    compileOnly 'com.kltyton:bonehitboxlib-common-1.21.1:0.3.0'
+    runtimeOnly 'com.kltyton:bonehitboxlib-neoforge-1.21.1:0.3.0'
 }
 
 processResources {

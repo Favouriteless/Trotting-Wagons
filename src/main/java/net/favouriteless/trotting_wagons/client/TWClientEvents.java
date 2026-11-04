@@ -2,6 +2,8 @@ package net.favouriteless.trotting_wagons.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.favouriteless.trotting_wagons.TrottingWagons;
+import net.favouriteless.trotting_wagons.common.entities.Chassis;
+import net.favouriteless.trotting_wagons.common.entities.WagonBuild;
 import net.favouriteless.trotting_wagons.common.entities.base.AbstractWagon;
 import net.favouriteless.trotting_wagons.common.items.HorseWhipItem;
 import net.favouriteless.trotting_wagons.common.network.packets.HitchAnimalPayload;
@@ -11,6 +13,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -86,6 +89,8 @@ public class TWClientEvents {
     @SubscribeEvent
     public static void onRenderHud(RenderGuiEvent.Post event) {
         Minecraft minecraft = Minecraft.getInstance();
+        if(minecraft.player != null && minecraft.screen == null && minecraft.crosshairPickEntity instanceof Chassis chassis)
+            drawBuildHint(event.getGuiGraphics(), minecraft, chassis);
         if(minecraft.player == null || !(minecraft.player.getVehicle() instanceof AbstractWagon wagon))
             return;
         if(wagon.getControllingPassenger() != minecraft.player)
@@ -100,6 +105,15 @@ public class TWClientEvents {
         if(filled > 0)
             graphics.blitSprite(ResourceLocation.withDefaultNamespace("hud/jump_bar_progress"), width, 5, 0, 0, x, y, filled, 5);
         RenderSystem.disableBlend();
+    }
+
+    private static void drawBuildHint(GuiGraphics graphics, Minecraft minecraft, Chassis chassis) {
+        Component planks = Component.translatable("gui.trotting_wagons.build.planks", chassis.plankCount(), WagonBuild.PLANKS);
+        Component iron = Component.translatable("gui.trotting_wagons.build.iron", chassis.ironCount(), WagonBuild.IRON);
+        int x = graphics.guiWidth() / 2;
+        int y = graphics.guiHeight() / 2 + 16;
+        graphics.drawString(minecraft.font, planks, x - minecraft.font.width(planks) / 2, y, 0xFFFFFF, true);
+        graphics.drawString(minecraft.font, iron, x - minecraft.font.width(iron) / 2, y + 10, 0xFFFFFF, true);
     }
 
     @SubscribeEvent

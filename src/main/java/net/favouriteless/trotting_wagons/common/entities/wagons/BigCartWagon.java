@@ -170,13 +170,13 @@ public class BigCartWagon extends AbstractInventoryWagon {
         return null;
     }
 
-    /** Riding pose folds the legs up by about 10px, so a player stored on the floor would hover. */
+    /** Riding pose folds the legs up by about 10px, so a player stored on the floor would hover. The driver stays on the cushion. */
     private static final double PLAYER_SIT = 10D / 16D;
 
     @Override
     protected Vec3 getRiderOffset(Entity passenger) {
         Vec3 local = super.getRiderOffset(passenger);
-        if(local != null && passenger instanceof Player)
+        if(local != null && passenger instanceof Player && passenger != getControllingPassenger())
             return local.subtract(0, PLAYER_SIT, 0);
         return local;
     }

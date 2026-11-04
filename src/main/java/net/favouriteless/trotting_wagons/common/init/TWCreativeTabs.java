@@ -35,6 +35,8 @@ public class TWCreativeTabs {
                 output.accept(TWItems.WHEEL.get());
                 output.accept(TWItems.WIDE_WHEEL.get());
                 output.accept(TWItems.REINFORCED_WHEEL.get());
+                output.accept(TWItems.LONG_STICK.get());
+                output.accept(TWItems.CHASSIS.get());
             })
             .build());
 

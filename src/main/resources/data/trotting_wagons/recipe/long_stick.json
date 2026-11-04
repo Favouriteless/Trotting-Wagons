@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "  S",
+    "TST",
+    "S  "
+  ],
+  "key": {
+    "S": { "item": "minecraft:stick" },
+    "T": { "item": "minecraft:string" }
+  },
+  "result": { "id": "trotting_wagons:long_stick" }
+}

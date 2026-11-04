@@ -1,5 +1,8 @@
 package net.favouriteless.trotting_wagons.common.entities.wagons;
 
+import com.kltyton.bonehitboxlib.api.bone.collision.ObbCollisionMode;
+import com.kltyton.bonehitboxlib.api.geckolib.entity.GeoBoneHitboxEntity;
+import com.kltyton.bonehitboxlib.api.registration.registrar.ObbBoneRegistrar;
 import net.favouriteless.trotting_wagons.ServerConfig;
 import net.favouriteless.trotting_wagons.common.entities.base.AbstractInventoryWagon;
 import net.favouriteless.trotting_wagons.common.entities.base.WagonSeat;
@@ -29,7 +32,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
-public class DebugWagon extends AbstractInventoryWagon {
+public class DebugWagon extends AbstractInventoryWagon implements GeoBoneHitboxEntity {
 
     public static final int PUMPKIN_SLOTS = 4;
     /** Cabin posts, driver seat, and floor. Wheels, tongue, and the lantern arm are outside. One pixel of slack. */
@@ -50,6 +53,13 @@ public class DebugWagon extends AbstractInventoryWagon {
     /** 0 none, 1 tongue (TongueSingle), 2 shafts (Tongue). */
     private static final EntityDataAccessor<Integer> DATA_HARNESS = SynchedEntityData.defineId(DebugWagon.class, EntityDataSerializers.INT);
     private static final Vec3 LAMP_POS = pivot(-28, 21, 6);
+
+    /** Body mesh only. Wheels, tongue, ladder, seats, and the lantern stay out of the oriented collision. */
+    @Override
+    public void bonehitboxlib$registerObbBones(ObbBoneRegistrar registrar) {
+        registrar.register(GeoBoneHitboxEntity.BONEHITBOXLIB_GEO_SOURCE, "cart")
+                .collision(ObbCollisionMode.HARD);
+    }
 
     private final NonNullList<ItemStack> banner = NonNullList.withSize(1, ItemStack.EMPTY);
     private final ItemStackHandler bannerItems = new ItemStackHandler(banner) {
@@ -230,6 +240,12 @@ public class DebugWagon extends AbstractInventoryWagon {
             maxZ = Math.max(maxZ, turned.z);
         }
         return new AABB(getX() + minX, getY(), getZ() + minZ, getX() + maxX, getY() + BODY_HEIGHT, getZ() + maxZ);
+    }
+
+    /** The white box stays visible, but walking into the wagon is handled by the yellow body box. */
+    @Override
+    public boolean canBeCollidedWith() {
+        return false;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package net.favouriteless.trotting_wagons.common.init;
 
 import net.favouriteless.trotting_wagons.TrottingWagons;
+import net.favouriteless.trotting_wagons.common.entities.BaseWagon;
+import net.favouriteless.trotting_wagons.common.entities.Chassis;
 import net.favouriteless.trotting_wagons.common.entities.wagons.AnimalWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.BarrelWagon;
 import net.favouriteless.trotting_wagons.common.entities.wagons.BigCartWagon;
@@ -54,5 +56,11 @@ public class TWEntityTypes {
 
     public static final DeferredHolder<EntityType<?>, EntityType<BigCartWagon>> BIG_CART_WAGON = REGISTRY.register("big_cart", () ->
             EntityType.Builder.of(BigCartWagon::new, MobCategory.MISC).sized(4.5F, 2.5F).build("big_cart"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<Chassis>> CHASSIS = REGISTRY.register("chassis", () ->
+            EntityType.Builder.of(Chassis::new, MobCategory.MISC).sized(3.625F, 0.5F).build("chassis"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<BaseWagon>> BASE_WAGON = REGISTRY.register("base_wagon", () ->
+            EntityType.Builder.of(BaseWagon::new, MobCategory.MISC).sized(3.2F, 1.4F).build("base_wagon"));
 
 }

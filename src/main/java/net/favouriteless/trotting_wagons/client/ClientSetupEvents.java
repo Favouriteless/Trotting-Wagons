@@ -2,6 +2,8 @@ package net.favouriteless.trotting_wagons.client;
 
 import net.favouriteless.trotting_wagons.TrottingWagons;
 import net.favouriteless.trotting_wagons.client.render.WagonItemRenderer;
+import net.favouriteless.trotting_wagons.client.render.entity.BaseWagonRenderer;
+import net.favouriteless.trotting_wagons.client.render.entity.ChassisRenderer;
 import net.favouriteless.trotting_wagons.client.render.entity.WagonRenderer;
 import net.favouriteless.trotting_wagons.client.screens.AnimalScreen;
 import net.favouriteless.trotting_wagons.client.screens.BarrelScreen;
@@ -82,6 +84,8 @@ public class ClientSetupEvents {
         event.registerEntityRenderer(TWEntityTypes.WARE_WAGON.get(), context -> new WagonRenderer<>(context, TrottingWagons.id("ware_wagon")));
         event.registerEntityRenderer(TWEntityTypes.KIBITKA_WAGON.get(), context -> new WagonRenderer<>(context, TrottingWagons.id("kibitka_wagon")));
         event.registerEntityRenderer(TWEntityTypes.BIG_CART_WAGON.get(), context -> new WagonRenderer<>(context, TrottingWagons.id("big_cart")));
+        event.registerEntityRenderer(TWEntityTypes.CHASSIS.get(), ChassisRenderer::new);
+        event.registerEntityRenderer(TWEntityTypes.BASE_WAGON.get(), BaseWagonRenderer::new);
     }
 
     public static IClientItemExtensions wagonExtension(EntityType<? extends AbstractWagon> entityType) {

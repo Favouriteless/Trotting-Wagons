@@ -1,17 +1,18 @@
 # Trotting Wagons Extended
 
-Horse-drawn wagons for Minecraft 1.21.1. Version **0.9.0** is a public test build: it is meant to be played, and it is not a finished 1.0.
+Horse-drawn wagons for Minecraft 1.21.1. Version **0.9.1** is a public test build: it is meant to be played, and it is not a finished 1.0.
 
 This repository continues [Favouriteless/Trotting-Wagons](https://github.com/Favouriteless/Trotting-Wagons). The mod id is still `trotting_wagons`, so old worlds keep their wagons. The name in the game is Trotting Wagons Extended.
 
-The current test jar is on the [0.9.0 release](https://github.com/JourneyNSettle/Trotting-Wagons-Extended/releases/tag/v0.9.0).
+The current test jar is on the [0.9.1 release](https://github.com/JourneyNSettle/Trotting-Wagons-Extended/releases/tag/v0.9.1).
 
 ## Requirements
 
 | | |
 | --- | --- |
 | Minecraft | 1.21.1 |
-| NeoForge | 21.1.219 or newer in the 21.1 line |
+| NeoForge | 21.1.248 or newer in the 21.1 line |
+| BoneHitboxLib | 0.3.0 for NeoForge 1.21.1. The debug wagon uses it for the body collision |
 | GeckoLib | 4.8.3 for NeoForge 1.21.1 |
 | Sides | Server and every client |
 
@@ -19,7 +20,11 @@ The current test jar is on the [0.9.0 release](https://github.com/JourneyNSettle
 
 ## Install
 
-Put `trotting-wagons-extended-0.9.0.jar` and GeckoLib in the `mods` folder. The server and every player need the same copy.
+Put `trotting-wagons-extended-0.9.1.jar`, GeckoLib, and BoneHitboxLib in the `mods` folder. The server and every player need the same copy.
+
+## Wagon base
+
+Craft a long stick from sticks and string, then a chassis from long sticks, sticks, string, and a slimeball. Place the chassis and right-click it with planks and iron ingots. One click adds one item. Sneak adds as many as the stage still needs, up to 16 planks and 4 iron ingots. When both are full, the chassis becomes a wagon base. The chassis does not stop the player. The finished base does, through a BoneHitboxLib hitbox. Break either with an axe to get the chassis item and the materials back.
 
 New wagons are in the **Trotting Wagons Extended** creative tab. The Conestoga, the royal wagon, the armored wagon, the horse whip, and all three wheel types also have crafting recipes. The other wagons do not, yet.
 
