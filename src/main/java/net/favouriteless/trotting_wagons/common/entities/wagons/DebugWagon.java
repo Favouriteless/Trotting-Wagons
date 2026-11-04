@@ -50,7 +50,7 @@ public class DebugWagon extends AbstractInventoryWagon implements GeoBoneHitboxE
     private static final EntityDataAccessor<Integer> DATA_PUMPKINS = SynchedEntityData.defineId(DebugWagon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<ItemStack> DATA_BANNER = SynchedEntityData.defineId(DebugWagon.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Boolean> DATA_LANTERN = SynchedEntityData.defineId(DebugWagon.class, EntityDataSerializers.BOOLEAN);
-    /** 0 none, 1 tongue (TongueSingle), 2 shafts (Tongue). */
+    /** 0 none, 1 shafts (bone shafts, one animal), 2 tongue (bone Tongue, two animals). */
     private static final EntityDataAccessor<Integer> DATA_HARNESS = SynchedEntityData.defineId(DebugWagon.class, EntityDataSerializers.INT);
     private static final Vec3 LAMP_POS = pivot(-28, 21, 6);
 
@@ -327,7 +327,7 @@ public class DebugWagon extends AbstractInventoryWagon implements GeoBoneHitboxE
 
     private void syncHarness() {
         ItemStack stack = harness.get(0);
-        int slots = stack.is(TWItems.SHAFTS.get()) ? 2 : stack.is(TWItems.TONGUE.get()) ? 1 : 0;
+        int slots = stack.is(TWItems.TONGUE.get()) ? 2 : stack.is(TWItems.SHAFTS.get()) ? 1 : 0;
         entityData.set(DATA_HARNESS, slots);
     }
 

@@ -143,7 +143,7 @@
 					]
 				},
 				{
-					"name": "TongueSingle",
+					"name": "shafts",
 					"parent": "Wagon",
 					"pivot": [0, 8.75, -21.88461],
 					"cubes": [
@@ -161,7 +161,7 @@
 				},
 				{
 					"name": "bow",
-					"parent": "TongueSingle",
+					"parent": "shafts",
 					"pivot": [0, 13.5, -76.88461],
 					"cubes": [
 						{"origin": [-6.5, 11, -78.88461], "size": [13, 6, 4], "uv": [473, 501], "mirror": true}

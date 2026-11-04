@@ -291,7 +291,7 @@ public class BigCartWagon extends AbstractInventoryWagon {
 
     private void syncHarness() {
         ItemStack stack = harness.get(0);
-        int slots = stack.is(TWItems.SHAFTS.get()) ? 2 : stack.is(TWItems.TONGUE.get()) ? 1 : 0;
+        int slots = stack.is(TWItems.TONGUE.get()) ? 2 : stack.is(TWItems.SHAFTS.get()) ? 1 : 0;
         entityData.set(DATA_HARNESS, slots);
     }
 

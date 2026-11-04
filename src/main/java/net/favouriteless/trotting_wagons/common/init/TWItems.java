@@ -32,9 +32,9 @@ public class TWItems {
     public static final DeferredHolder<Item, WagonItem> BIG_CART_WAGON = REGISTRY.register("big_cart", () -> new WagonItem(TWEntityTypes.BIG_CART_WAGON::get, wagonProps()));
 
     public static final DeferredHolder<Item, HorseWhipItem> HORSE_WHIP = REGISTRY.register("horse_whip", () -> new HorseWhipItem(new Properties().stacksTo(1)));
-    /** One animal. The model bone is TongueSingle. */
-    public static final DeferredHolder<Item, Item> TONGUE = REGISTRY.register("tongue", () -> new Item(new Properties().stacksTo(1)));
     /** Two animals. The model bone is Tongue. */
+    public static final DeferredHolder<Item, Item> TONGUE = REGISTRY.register("tongue", () -> new Item(new Properties().stacksTo(1)));
+    /** One animal. The model bone is shafts. */
     public static final DeferredHolder<Item, Item> SHAFTS = REGISTRY.register("shafts", () -> new Item(new Properties().stacksTo(1)));
     public static final DeferredHolder<Item, WheelItem> WHEEL = REGISTRY.register("wheel", () -> new WheelItem(new Properties().durability(100)));
     public static final DeferredHolder<Item, WheelItem> WIDE_WHEEL = REGISTRY.register("wide_wheel", () -> new WheelItem(new Properties().durability(100)));

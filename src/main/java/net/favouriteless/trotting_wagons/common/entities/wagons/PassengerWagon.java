@@ -43,7 +43,7 @@ public class PassengerWagon extends AbstractWagon implements MenuProvider {
     private static final double BODY_HEIGHT = 3.5D;
     private static final int LANTERN_MASK = (1 << LANTERNS) - 1;
     private static final EntityDataAccessor<Integer> DATA_LANTERNS = SynchedEntityData.defineId(PassengerWagon.class, EntityDataSerializers.INT);
-    /** 0 none, 1 the tongue item (TongueSingle), 2 the shafts item (Tongue). */
+    /** 0 none, 1 shafts (bone shafts, one animal), 2 tongue (bone Tongue, two animals). */
     private static final EntityDataAccessor<Integer> DATA_HARNESS = SynchedEntityData.defineId(PassengerWagon.class, EntityDataSerializers.INT);
     private static final Vec3[] LAMP_POS = {
             pivot(0, 39.6D, -30),
@@ -181,7 +181,7 @@ public class PassengerWagon extends AbstractWagon implements MenuProvider {
 
     private void syncHarness() {
         ItemStack stack = harness.get(0);
-        int slots = stack.is(TWItems.SHAFTS.get()) ? 2 : stack.is(TWItems.TONGUE.get()) ? 1 : 0;
+        int slots = stack.is(TWItems.TONGUE.get()) ? 2 : stack.is(TWItems.SHAFTS.get()) ? 1 : 0;
         entityData.set(DATA_HARNESS, slots);
     }
 

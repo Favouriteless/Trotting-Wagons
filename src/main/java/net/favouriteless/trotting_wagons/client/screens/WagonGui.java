@@ -128,7 +128,7 @@ final class WagonGui {
 
     private static ItemStack emptyIcon(AbstractContainerMenu menu, Slot slot) {
         if(slot instanceof HarnessSlot)
-            return new ItemStack(TWItems.SHAFTS.get());
+            return new ItemStack(TWItems.TONGUE.get());
         if(slot instanceof WheelSlot)
             return new ItemStack(TWItems.WHEEL.get());
         if(slot instanceof BannerSlot)

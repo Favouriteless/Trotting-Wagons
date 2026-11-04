@@ -26,7 +26,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Entity.RemovalReason;
-import net.minecraft.world.entity.EntityAttachment;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
@@ -60,8 +59,6 @@ public class KibitkaWagon extends AbstractInventoryWagon {
     /** Hinge is the Door pivot. Negative yaw swings the free edge into the cabin. Camp leaves this off. */
     public static final boolean DOOR_OPENS = false;
     public static final float DOOR_OPEN = (float)Math.toRadians(-90.0D);
-    /** Bow cube center is y=14 and the shaft aim is y=8.5, so the bow sits this far above the shaft. */
-    private static final double BOW_ABOVE_SHAFT = (14D - 8.5D) / 16D;
     /** Top centre of the Bed mattress. Sleep does not use the seat hip adjustment. */
     private static final double BED_X = 6.8D / 16D;
     private static final double BED_Y = 19D / 16D;
@@ -70,7 +67,7 @@ public class KibitkaWagon extends AbstractInventoryWagon {
     private static final EntityDataAccessor<Integer> DATA_CAMP = SynchedEntityData.defineId(KibitkaWagon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_CAMP_TARGET = SynchedEntityData.defineId(KibitkaWagon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_LANTERN = SynchedEntityData.defineId(KibitkaWagon.class, EntityDataSerializers.BOOLEAN);
-    /** 0 none, 1 the tongue item (TongueSingle), 2 the shafts item (Tongue). */
+    /** 0 none, 1 shafts (bone shafts, one animal), 2 tongue (bone Tongue, two animals). */
     private static final EntityDataAccessor<Integer> DATA_HARNESS = SynchedEntityData.defineId(KibitkaWagon.class, EntityDataSerializers.INT);
     private static final Vec3 LAMP_POS = pivot(0, 39.6D, -36);
 
@@ -165,14 +162,6 @@ public class KibitkaWagon extends AbstractInventoryWagon {
     @Override
     protected double tongueHeight() {
         return 8.5D / 16D;
-    }
-
-    @Override
-    protected double hitchBackHeight(Entity animal) {
-        Vec3 seat = animal.getAttachments().getNullable(EntityAttachment.PASSENGER, 0, 0);
-        if(seat == null)
-            return super.hitchBackHeight(animal);
-        return Math.max(0.2D, seat.y - BOW_ABOVE_SHAFT);
     }
 
     @Override
@@ -426,7 +415,7 @@ public class KibitkaWagon extends AbstractInventoryWagon {
 
     private void syncHarness() {
         ItemStack stack = harness.get(0);
-        int slots = stack.is(TWItems.SHAFTS.get()) ? 2 : stack.is(TWItems.TONGUE.get()) ? 1 : 0;
+        int slots = stack.is(TWItems.TONGUE.get()) ? 2 : stack.is(TWItems.SHAFTS.get()) ? 1 : 0;
         entityData.set(DATA_HARNESS, slots);
     }
 

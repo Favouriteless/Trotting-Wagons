@@ -36,6 +36,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.EntityAttachment;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -489,12 +490,12 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         return speed;
     }
 
-    /** Two-animal shafts stay at 1. A single tongue multiplies the finished speed. */
+    /** Two-animal tongue stays at 1. Shafts for one animal multiply the finished speed. */
     private double harnessSpeedFactor() {
         return hitchSlots() == 1 ? singleHarnessFactor() : 1.0D;
     }
 
-    /** Оглобли, bone TongueSingle. Дышло is always 1. Kibitka and the big cart stay at 1. */
+    /** Оглобли, bone shafts. Дышло is always 1. Kibitka and the big cart stay at 1. */
     protected double singleHarnessFactor() {
         return 1.0D;
     }
@@ -1226,7 +1227,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         else if(!hitched && pitch < 0)
             reach += 1.25D * getWheelLength();
         double rest = tongueHeight() * Math.cos(roll) * Math.cos(pitch) - reach * Math.sin(pitch) - drop;
-        double target = hitched ? hitchedBackHeight() : 0;
+        double target = hitched ? hitchedBackHeight() - bowAboveShaft() : 0;
         double sine = Mth.clamp((target - rest) / tongueLength(), -1D, 1D);
         return (float)Math.asin(sine);
     }
@@ -1243,22 +1244,28 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         return 0.85D;
     }
 
+    /** Bow cube top is y=17 on every harness. The shaft line is tongueHeight, so the bow stands this far above it. */
+    private double bowAboveShaft() {
+        return 17D / 16D - tongueHeight();
+    }
+
     private double hitchedBackHeight() {
-        double lowest = Double.POSITIVE_INFINITY;
+        double highest = Double.NEGATIVE_INFINITY;
         for(Side side : Side.values()) {
             Entity animal = level().getEntity(getHitchEntityId(side));
             if(!(animal instanceof Mob))
                 animal = getHorse(side);
             if(animal == null || !animal.isAlive())
                 continue;
-            lowest = Math.min(lowest, hitchBackHeight(animal));
+            highest = Math.max(highest, hitchBackHeight(animal));
         }
-        return lowest == Double.POSITIVE_INFINITY ? hitchedTongueTarget() : lowest;
+        return highest == Double.NEGATIVE_INFINITY ? hitchedTongueTarget() : highest;
     }
 
-    /** Height the shaft aims at on this animal's back. */
+    /** Rider point on this animal. The bow top is aimed at the higher one. */
     protected double hitchBackHeight(Entity animal) {
-        return animal.getBbHeight() * 0.7D;
+        Vec3 seat = animal.getAttachments().getNullable(EntityAttachment.PASSENGER, 0, 0.0F);
+        return seat != null ? seat.y : animal.getBbHeight() * 0.7D;
     }
 
     public DyeColor getColor() {

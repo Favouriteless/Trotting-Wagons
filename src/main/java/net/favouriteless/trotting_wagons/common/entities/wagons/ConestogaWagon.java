@@ -35,7 +35,7 @@ public class ConestogaWagon extends AbstractInventoryWagon {
     private static final int RIGHT = 2;
     private static final int LARGE = 3;
 
-    /** 0 none, 1 the tongue item (TongueSingle), 2 the shafts item (Tongue). */
+    /** 0 none, 1 shafts (bone shafts, one animal), 2 tongue (bone Tongue, two animals). */
     private static final EntityDataAccessor<Integer> DATA_HARNESS = SynchedEntityData.defineId(ConestogaWagon.class, EntityDataSerializers.INT);
 
     private final NonNullList<ItemStack> harness = NonNullList.withSize(1, ItemStack.EMPTY);
@@ -203,7 +203,7 @@ public class ConestogaWagon extends AbstractInventoryWagon {
 
     private void syncHarness() {
         ItemStack stack = harness.get(0);
-        int slots = stack.is(TWItems.SHAFTS.get()) ? 2 : stack.is(TWItems.TONGUE.get()) ? 1 : 0;
+        int slots = stack.is(TWItems.TONGUE.get()) ? 2 : stack.is(TWItems.SHAFTS.get()) ? 1 : 0;
         entityData.set(DATA_HARNESS, slots);
     }
 

@@ -86,10 +86,10 @@ public class WagonModel<T extends AbstractWagon> extends DefaultedEntityGeoModel
         float bodyPitch = wagon.getXRot(partialTick) + sag.pitch();
         int harness = wagon.hitchSlots();
         hideBone(processor, "Tongue", harness != 2);
-        hideBone(processor, "TongueSingle", harness != 1);
+        hideBone(processor, "shafts", harness != 1);
         float tongue = wagon.tongueAngle(bodyPitch, sag.roll(), sag.drop());
         spinTongue(processor, "Tongue", tongue);
-        spinTongue(processor, "TongueSingle", tongue);
+        spinTongue(processor, "shafts", tongue);
         if(wagon instanceof DebugWagon debugWagon) {
             GeoBone ladder = processor.getBone("Ladder");
             if(ladder != null)

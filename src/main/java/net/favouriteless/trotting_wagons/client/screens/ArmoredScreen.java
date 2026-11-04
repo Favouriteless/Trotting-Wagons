@@ -94,9 +94,9 @@ public class ArmoredScreen extends AbstractContainerScreen<ArmoredMenu> {
 
     private static String harnessKey(int slots) {
         if(slots > 1)
-            return "gui.trotting_wagons.harness.shafts";
-        if(slots == 1)
             return "gui.trotting_wagons.harness.tongue";
+        if(slots == 1)
+            return "gui.trotting_wagons.harness.shafts";
         return "gui.trotting_wagons.harness.none";
     }
 

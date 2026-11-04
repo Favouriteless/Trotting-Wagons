@@ -57,7 +57,7 @@ public class WareWagon extends AbstractWagon implements MenuProvider {
     private static final int CHEST_MASK = (1 << CHESTS) - 1;
     private static final EntityDataAccessor<Integer> DATA_CHESTS = SynchedEntityData.defineId(WareWagon.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_LANTERN = SynchedEntityData.defineId(WareWagon.class, EntityDataSerializers.BOOLEAN);
-    /** 0 none, 1 the tongue item (TongueSingle), 2 the shafts item (Tongue). */
+    /** 0 none, 1 shafts (bone shafts, one animal), 2 tongue (bone Tongue, two animals). */
     private static final EntityDataAccessor<Integer> DATA_HARNESS = SynchedEntityData.defineId(WareWagon.class, EntityDataSerializers.INT);
     /** Glass centre after the Lamp bone's 90° yaw, in model pixels. */
     private static final Vec3 LAMP_POS = pivot(14.53D, 42.2D, -22.68D);
@@ -291,7 +291,7 @@ public class WareWagon extends AbstractWagon implements MenuProvider {
 
     private void syncHarness() {
         ItemStack stack = harness.get(0);
-        int slots = stack.is(TWItems.SHAFTS.get()) ? 2 : stack.is(TWItems.TONGUE.get()) ? 1 : 0;
+        int slots = stack.is(TWItems.TONGUE.get()) ? 2 : stack.is(TWItems.SHAFTS.get()) ? 1 : 0;
         entityData.set(DATA_HARNESS, slots);
     }
 
