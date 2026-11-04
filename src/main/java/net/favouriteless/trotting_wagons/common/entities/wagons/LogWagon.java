@@ -25,6 +25,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
@@ -156,6 +157,11 @@ public class LogWagon extends AbstractWagon implements MenuProvider {
             sagPose = LogWagonSag.pose(mask, sagKinds);
         }
         return sagPose;
+    }
+
+    @Override
+    protected AABB makeBoundingBox() {
+        return orientedBody(1.625D, 0.0D, 3.207D, 2.562D, 2.266D);
     }
 
     @Override

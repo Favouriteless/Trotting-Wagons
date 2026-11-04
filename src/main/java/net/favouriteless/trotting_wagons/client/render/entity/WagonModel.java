@@ -77,6 +77,8 @@ public class WagonModel<T extends AbstractWagon> extends DefaultedEntityGeoModel
             hideWare(processor, wareWagon);
         if(wagon instanceof KibitkaWagon kibitka)
             poseKibitka(processor, kibitka, partialTick);
+        if(wagon instanceof AnimalWagon animal)
+            poseAnimalGate(processor, animal, partialTick);
         if(wagon instanceof BigCartWagon bigCart)
             hideBone(processor, "Lamp", !bigCart.hasLantern());
 
@@ -178,6 +180,18 @@ public class WagonModel<T extends AbstractWagon> extends DefaultedEntityGeoModel
         GeoBone bone = processor.getBone(name);
         if(bone != null)
             bone.setHidden(hidden);
+    }
+
+    private static void poseAnimalGate(AnimationProcessor<?> processor, AnimalWagon wagon, float partialTick) {
+        float open = wagon.gateOpen(partialTick) * AnimalWagon.GATE_OPEN;
+        setGate(processor, "LeftGate", -open);
+        setGate(processor, "RightGate", open);
+    }
+
+    private static void setGate(AnimationProcessor<?> processor, String name, float yaw) {
+        GeoBone bone = processor.getBone(name);
+        if(bone != null)
+            bone.setRotY(yaw);
     }
 
     private static void poseKibitka(AnimationProcessor<?> processor, KibitkaWagon wagon, float partialTick) {

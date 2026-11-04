@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
@@ -136,6 +137,11 @@ public class RoyalWagon extends AbstractInventoryWagon {
         ItemStack stack = harness.get(0);
         int slots = stack.is(TWItems.SHAFTS.get()) ? 2 : stack.is(TWItems.TONGUE.get()) ? 1 : 0;
         entityData.set(DATA_HARNESS, slots);
+    }
+
+    @Override
+    protected AABB makeBoundingBox() {
+        return orientedBody(1.438D, 0.0D, 3.312D, 2.266D, 2.424D);
     }
 
     @Override

@@ -221,25 +221,7 @@ public class DebugWagon extends AbstractInventoryWagon implements GeoBoneHitboxE
 
     @Override
     protected AABB makeBoundingBox() {
-        float yaw = getYRot();
-        double minX = Double.POSITIVE_INFINITY;
-        double minZ = Double.POSITIVE_INFINITY;
-        double maxX = Double.NEGATIVE_INFINITY;
-        double maxZ = Double.NEGATIVE_INFINITY;
-        double[][] corners = {
-                {BODY_HALF_X, BODY_FRONT},
-                {-BODY_HALF_X, BODY_FRONT},
-                {BODY_HALF_X, -BODY_REAR},
-                {-BODY_HALF_X, -BODY_REAR}
-        };
-        for(double[] corner : corners) {
-            Vec3 turned = rotateY(corner[0], 0, corner[1], yaw);
-            minX = Math.min(minX, turned.x);
-            maxX = Math.max(maxX, turned.x);
-            minZ = Math.min(minZ, turned.z);
-            maxZ = Math.max(maxZ, turned.z);
-        }
-        return new AABB(getX() + minX, getY(), getZ() + minZ, getX() + maxX, getY() + BODY_HEIGHT, getZ() + maxZ);
+        return orientedBody(1.984D, 0.0D, 4.564D, 2.644D, 1.953D);
     }
 
     /** The white box stays visible, but walking into the wagon is handled by the yellow body box. */

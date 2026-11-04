@@ -153,6 +153,11 @@ public class KibitkaWagon extends AbstractInventoryWagon {
     }
 
     @Override
+    protected AABB makeBoundingBox() {
+        return orientedBody(1.625D, 0.0D, 3.806D, 2.469D, 2.438D);
+    }
+
+    @Override
     protected double tongueLength() {
         return 57D / 16D;
     }

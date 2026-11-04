@@ -30,6 +30,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LightBlock;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
@@ -177,6 +178,11 @@ public class WareWagon extends AbstractWagon implements MenuProvider {
 
     public boolean hasLantern() {
         return entityData.get(DATA_LANTERN);
+    }
+
+    @Override
+    protected AABB makeBoundingBox() {
+        return orientedBody(1.625D, 0.0D, 2.981D, 2.062D, 2.078D);
     }
 
     @Override

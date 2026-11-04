@@ -24,6 +24,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
@@ -185,6 +186,11 @@ public class BarrelWagon extends AbstractWagon implements MenuProvider {
             sagPose = BarrelWagonSag.pose(mask, sagKinds);
         }
         return sagPose;
+    }
+
+    @Override
+    protected AABB makeBoundingBox() {
+        return orientedBody(1.625D, 0.0D, 2.710D, 2.518D, 2.266D);
     }
 
     @Override

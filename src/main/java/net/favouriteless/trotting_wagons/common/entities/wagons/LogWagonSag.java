@@ -26,7 +26,7 @@ final class LogWagonSag {
     static AbstractWagon.WheelSag pose(int mask, int[] kinds) {
         mask &= 0x0F;
         int count = Integer.bitCount(mask);
-        if(count >= 3)
+        if(count == 0 || count >= 3)
             return AbstractWagon.WheelSag.NONE;
         double[] solved = count == 2 ? solvePair(mask, kinds) : solveFlat(mask, kinds);
         return new AbstractWagon.WheelSag((float)solved[0], (float)solved[1], solved[2]);

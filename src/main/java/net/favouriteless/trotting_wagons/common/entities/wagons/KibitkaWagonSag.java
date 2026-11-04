@@ -49,7 +49,7 @@ final class KibitkaWagonSag {
         boolean iron = ironAxles(mask, kinds);
         int count = Integer.bitCount(mask);
         if(count == 0)
-            return new AbstractWagon.WheelSag(0, 0, supportMin(0, 0, scale, iron));
+            return AbstractWagon.WheelSag.NONE;
         if(count >= 3) {
             if(sharesGround(mask, kinds) && supportMin(0, 0, scale, iron) >= -GROUND_SLOP)
                 return AbstractWagon.WheelSag.NONE;

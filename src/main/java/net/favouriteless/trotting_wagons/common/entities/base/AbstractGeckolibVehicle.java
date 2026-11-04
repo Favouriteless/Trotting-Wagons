@@ -260,9 +260,10 @@ public abstract class AbstractGeckolibVehicle extends Entity implements GeoEntit
         lerpSteps = steps;
     }
 
+    /** The white box still blocks terrain and can be targeted. It does not stop a player or an animal. */
     @Override
     public boolean canBeCollidedWith() {
-        return !hitchMoving;
+        return false;
     }
 
     /** True while a hitched animal is stepped onto the new shaft point. */

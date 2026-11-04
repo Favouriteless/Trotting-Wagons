@@ -9,6 +9,9 @@
     "LivingEntityClimbMixin",
     "ServerGamePacketListenerImplMixin"
   ],
+  "client": [
+    "BuildFlashMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

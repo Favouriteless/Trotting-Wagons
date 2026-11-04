@@ -17,6 +17,13 @@ public class BaseWagonRenderer extends GeoEntityRenderer<BaseWagon> {
     }
 
     @Override
+    public void render(BaseWagon wagon, float entityYaw, float partialTick, PoseStack pose, MultiBufferSource buffer, int packedLight) {
+        super.render(wagon, entityYaw, partialTick, pose, buffer, packedLight);
+        if(!wagon.choice().isEmpty())
+            BuildHammer.render(pose, buffer, wagon, partialTick, packedLight, 2.75D);
+    }
+
+    @Override
     public void preRender(PoseStack pose, BaseWagon wagon, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer,
                           boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         float yaw = -Mth.rotLerp(partialTick, wagon.yRotO, wagon.getYRot());

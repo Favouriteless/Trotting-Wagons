@@ -21,6 +21,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
@@ -113,6 +114,11 @@ public class ArmoredWagon extends AbstractWagon implements MenuProvider {
         ItemStack stack = harness.get(0);
         int slots = stack.is(TWItems.SHAFTS.get()) ? 2 : stack.is(TWItems.TONGUE.get()) ? 1 : 0;
         entityData.set(DATA_HARNESS, slots);
+    }
+
+    @Override
+    protected AABB makeBoundingBox() {
+        return orientedBody(2.279D, 0.0D, 3.479D, 2.094D, 2.391D);
     }
 
     @Override

@@ -1,10 +1,10 @@
 # Trotting Wagons Extended
 
-Horse-drawn wagons for Minecraft 1.21.1. Version **0.9.1** is a public test build: it is meant to be played, and it is not a finished 1.0.
+Horse-drawn wagons for Minecraft 1.21.1. Version **0.9.2** is a public test build: it is meant to be played, and it is not a finished 1.0.
 
 This repository continues [Favouriteless/Trotting-Wagons](https://github.com/Favouriteless/Trotting-Wagons). The mod id is still `trotting_wagons`, so old worlds keep their wagons. The name in the game is Trotting Wagons Extended.
 
-The current test jar is on the [0.9.1 release](https://github.com/JourneyNSettle/Trotting-Wagons-Extended/releases/tag/v0.9.1).
+The current test jar is on the [0.9.2 release](https://github.com/JourneyNSettle/Trotting-Wagons-Extended/releases/tag/v0.9.2).
 
 ## Requirements
 
@@ -20,7 +20,7 @@ The current test jar is on the [0.9.1 release](https://github.com/JourneyNSettle
 
 ## Install
 
-Put `trotting-wagons-extended-0.9.1.jar`, GeckoLib, and BoneHitboxLib in the `mods` folder. The server and every player need the same copy.
+Put `trotting-wagons-extended-0.9.2.jar`, GeckoLib, and BoneHitboxLib in the `mods` folder. The server and every player need the same copy.
 
 ## Wagon base
 

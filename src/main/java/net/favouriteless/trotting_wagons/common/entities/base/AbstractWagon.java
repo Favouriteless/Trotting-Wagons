@@ -4,6 +4,7 @@ import net.favouriteless.trotting_wagons.ServerConfig;
 import net.favouriteless.trotting_wagons.TrottingWagons;
 import net.favouriteless.trotting_wagons.client.TWClient;
 import net.favouriteless.trotting_wagons.compat.BlockRunnerSpeed;
+import net.favouriteless.trotting_wagons.common.entities.WagonBuild;
 import net.favouriteless.trotting_wagons.common.init.TWItems;
 import net.favouriteless.trotting_wagons.common.util.LevelUtils;
 import net.minecraft.advancements.AdvancementHolder;
@@ -123,6 +124,8 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
     private double kilometerPart;
     private boolean movedRecently;
     private double currentSpeed;
+    private final WagonBuild builtPlan = new WagonBuild();
+    private boolean builtFromBase;
 
     private final Mob[] horses = new Mob[2];
     private final UUID[] horseUuids = new UUID[2];
@@ -192,11 +195,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
             seatIds[i] = -1;
 
         setHealth(maxHealth);
-        if(!level.isClientSide) {
-            ItemStack wheel = new ItemStack(TWItems.WHEEL.get());
-            for(int i = 0; i < WHEEL_COUNT; i++)
-                wheelHandler.setStackInSlot(i, wheel.copy());
-        }
+        updateWheelMask();
     }
 
     protected double speedCoefficient() {
@@ -236,6 +235,35 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
             }
         }
         super.tick();
+        setBoundingBox(makeBoundingBox());
+    }
+
+    /** Yaw-aligned body. The tongue and shafts are not part of this box. */
+    protected AABB orientedBody(double halfX, double bottom, double top, double rear, double front) {
+        float yaw = getYRot();
+        double minX = Double.POSITIVE_INFINITY;
+        double minY = Double.POSITIVE_INFINITY;
+        double minZ = Double.POSITIVE_INFINITY;
+        double maxX = Double.NEGATIVE_INFINITY;
+        double maxY = Double.NEGATIVE_INFINITY;
+        double maxZ = Double.NEGATIVE_INFINITY;
+        double[] xs = {-halfX, halfX};
+        double[] ys = {bottom, top};
+        double[] zs = {-rear, front};
+        for(double x : xs) {
+            for(double y : ys) {
+                for(double z : zs) {
+                    Vec3 turned = rotateY(x, y, z, yaw);
+                    minX = Math.min(minX, turned.x);
+                    minY = Math.min(minY, turned.y);
+                    minZ = Math.min(minZ, turned.z);
+                    maxX = Math.max(maxX, turned.x);
+                    maxY = Math.max(maxY, turned.y);
+                    maxZ = Math.max(maxZ, turned.z);
+                }
+            }
+        }
+        return new AABB(getX() + minX, getY() + minY, getZ() + minZ, getX() + maxX, getY() + maxY, getZ() + maxZ);
     }
 
     private void validateHorses() {
@@ -724,10 +752,31 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
             if(pickResult != null)
                 spawnAtLocation(pickResult);
         }
-        else {
-            spawnAtLocation(new ItemStack(Items.OAK_PLANKS, RANDOM.nextInt(7)));
-            spawnAtLocation(new ItemStack(Items.IRON_INGOT, RANDOM.nextInt(3)));
+        else
+            dropDestructionLoot();
+    }
+
+    /** Scrap from a wrecked wagon. One built on the base returns the materials that were put in. */
+    protected void dropDestructionLoot() {
+        if(builtFromBase) {
+            builtPlan.drop(this);
+            return;
         }
+        spawnAtLocation(new ItemStack(Items.OAK_PLANKS, RANDOM.nextInt(7)));
+        spawnAtLocation(new ItemStack(Items.IRON_INGOT, RANDOM.nextInt(3)));
+    }
+
+    public void takePlan(WagonBuild source) {
+        builtFromBase = true;
+        builtPlan.copyFrom(source);
+    }
+
+    protected WagonBuild builtPlan() {
+        return builtPlan;
+    }
+
+    protected boolean builtFromBase() {
+        return builtFromBase;
     }
 
     @Override
@@ -839,8 +888,8 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         DyeColor color = getDefaultColor();
         builder.define(DATA_ID_COLOR, color != null ? OptionalInt.of(color.getId()) : OptionalInt.empty());
         builder.define(DATA_ID_HEALTH, (float)0);
-        builder.define(DATA_WHEELS, (byte)0x0F);
-        builder.define(DATA_WHEEL_KINDS, (byte)0x55);
+        builder.define(DATA_WHEELS, (byte)0);
+        builder.define(DATA_WHEEL_KINDS, (byte)0);
         builder.define(DATA_HITCH_LEFT, -1);
         builder.define(DATA_HITCH_RIGHT, -1);
         builder.define(DATA_DISTANCE, 0.0F);
@@ -909,6 +958,9 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         if(nbt.contains("RepairNeeds"))
             readRepairNeeds(nbt.getString("RepairNeeds"));
         refreshRepairSlots();
+        builtFromBase = nbt.getBoolean("BuiltFromBase");
+        if(builtFromBase)
+            builtPlan.load(nbt, "BuiltPlan", registryAccess());
     }
 
     @Override
@@ -950,6 +1002,9 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         ContainerHelper.saveAllItems(repairTag, repair, registryAccess());
         nbt.put("Repair", repairTag);
         nbt.putString("RepairNeeds", repairNeeds());
+        nbt.putBoolean("BuiltFromBase", builtFromBase);
+        if(builtFromBase)
+            builtPlan.save(nbt, "BuiltPlan", registryAccess());
     }
 
     public void setOwner(Player player) {
@@ -1699,7 +1754,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         boolean rr = wheelOn(3);
         int count = (fl ? 1 : 0) + (fr ? 1 : 0) + (rl ? 1 : 0) + (rr ? 1 : 0);
         if(count == 0)
-            return new WheelSag(0, 0, WHEEL_SINK);
+            return WheelSag.NONE;
         if(count >= 3)
             return WheelSag.NONE;
 

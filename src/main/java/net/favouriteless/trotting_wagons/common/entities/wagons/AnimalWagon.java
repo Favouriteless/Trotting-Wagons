@@ -18,6 +18,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -25,8 +26,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.favouriteless.trotting_wagons.common.entities.WagonBuild;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -66,6 +70,11 @@ public class AnimalWagon extends AbstractWagon implements MenuProvider {
     private static final double HIT_HEIGHT = 2.75D;
     private static final int[] FRONT_GROUP = {1, 2, 4, 5};
     private static final int[] REAR_GROUP = {4, 5, 7, 8};
+    /** Open leaves swing outward, toward the rear of the wagon. */
+    public static final float GATE_OPEN = (float)Math.toRadians(90.0D);
+
+    private float gate = 1.0F;
+    private float gateO = 1.0F;
 
     public static final WagonSeat[] SEATS = new WagonSeat[] {
             new WagonSeat(seat(0, 14, -32.25D), WagonSeat.Kind.DRIVER),
@@ -89,6 +98,37 @@ public class AnimalWagon extends AbstractWagon implements MenuProvider {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_HARNESS, 0);
+    }
+
+    /** Closed only when every animal seat is locked. */
+    public boolean animalGateClosed() {
+        boolean any = false;
+        for(int i = 0; i < SEATS.length; i++) {
+            if(!SEATS[i].canLockAnimals())
+                continue;
+            any = true;
+            if(!isSeatLocked(i))
+                return false;
+        }
+        return any;
+    }
+
+    public float gateOpen(float partialTick) {
+        return Mth.lerp(partialTick, gateO, gate);
+    }
+
+    @Override
+    protected void dropDestructionLoot() {
+        if(!builtFromBase()) {
+            super.dropDestructionLoot();
+            return;
+        }
+        WagonBuild plan = builtPlan();
+        plan.dropUpTo(this, stack -> stack.is(TWItems.LONG_STICK.get()), 2 + getRandom().nextInt(3), TWItems.LONG_STICK.get());
+        plan.dropUpTo(this, stack -> stack.is(ItemTags.PLANKS), 12 + getRandom().nextInt(9), Items.OAK_PLANKS);
+        plan.dropUpTo(this, stack -> stack.is(Items.IRON_INGOT), 6 + getRandom().nextInt(5), Items.IRON_INGOT);
+        plan.dropUpTo(this, stack -> stack.is(Items.HAY_BLOCK), 1 + getRandom().nextInt(2), Items.HAY_BLOCK);
+        plan.dropUpTo(this, stack -> stack.is(ItemTags.WOOL), getRandom().nextInt(2), Items.WHITE_WOOL);
     }
 
     @Override
@@ -117,30 +157,15 @@ public class AnimalWagon extends AbstractWagon implements MenuProvider {
     @Override
     public void tick() {
         super.tick();
+        gateO = gate;
+        float target = animalGateClosed() ? 0.0F : 1.0F;
+        gate += Mth.clamp(target - gate, -0.15F, 0.15F);
         setBoundingBox(makeBoundingBox());
     }
 
     @Override
     protected AABB makeBoundingBox() {
-        float yaw = getYRot();
-        double minX = Double.POSITIVE_INFINITY;
-        double minZ = Double.POSITIVE_INFINITY;
-        double maxX = Double.NEGATIVE_INFINITY;
-        double maxZ = Double.NEGATIVE_INFINITY;
-        double[][] corners = {
-                {HIT_HALF_X, HIT_FRONT},
-                {-HIT_HALF_X, HIT_FRONT},
-                {HIT_HALF_X, -HIT_REAR},
-                {-HIT_HALF_X, -HIT_REAR}
-        };
-        for(double[] corner : corners) {
-            Vec3 turned = rotateY(corner[0], 0, corner[1], yaw);
-            minX = Math.min(minX, turned.x);
-            maxX = Math.max(maxX, turned.x);
-            minZ = Math.min(minZ, turned.z);
-            maxZ = Math.max(maxZ, turned.z);
-        }
-        return new AABB(getX() + minX, getY(), getZ() + minZ, getX() + maxX, getY() + HIT_HEIGHT, getZ() + maxZ);
+        return orientedBody(1.625D, 0.0D, 3.409D, 2.781D, 2.266D);
     }
 
     @Override

@@ -6,6 +6,7 @@ import net.favouriteless.trotting_wagons.client.render.entity.BaseWagonRenderer;
 import net.favouriteless.trotting_wagons.client.render.entity.ChassisRenderer;
 import net.favouriteless.trotting_wagons.client.render.entity.WagonRenderer;
 import net.favouriteless.trotting_wagons.client.screens.AnimalScreen;
+import net.favouriteless.trotting_wagons.client.screens.BaseBuildScreen;
 import net.favouriteless.trotting_wagons.client.screens.BarrelScreen;
 import net.favouriteless.trotting_wagons.client.screens.BigCartScreen;
 import net.favouriteless.trotting_wagons.client.screens.ArmoredScreen;
@@ -64,6 +65,7 @@ public class ClientSetupEvents {
         event.register(TWMenuTypes.WARE.get(), WareScreen::new);
         event.register(TWMenuTypes.KIBITKA.get(), KibitkaScreen::new);
         event.register(TWMenuTypes.BIG_CART.get(), BigCartScreen::new);
+        event.register(TWMenuTypes.BASE_BUILD.get(), BaseBuildScreen::new);
     }
 
     @SubscribeEvent

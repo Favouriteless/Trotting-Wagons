@@ -2,6 +2,7 @@ package net.favouriteless.trotting_wagons.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.favouriteless.trotting_wagons.TrottingWagons;
+import net.favouriteless.trotting_wagons.common.entities.BaseWagon;
 import net.favouriteless.trotting_wagons.common.entities.Chassis;
 import net.favouriteless.trotting_wagons.common.entities.WagonBuild;
 import net.favouriteless.trotting_wagons.common.entities.base.AbstractWagon;
@@ -91,6 +92,8 @@ public class TWClientEvents {
         Minecraft minecraft = Minecraft.getInstance();
         if(minecraft.player != null && minecraft.screen == null && minecraft.crosshairPickEntity instanceof Chassis chassis)
             drawBuildHint(event.getGuiGraphics(), minecraft, chassis);
+        if(minecraft.player != null && minecraft.screen == null && minecraft.crosshairPickEntity instanceof BaseWagon base && base.showsPlan())
+            drawBuildPlan(event.getGuiGraphics(), minecraft, base);
         if(minecraft.player == null || !(minecraft.player.getVehicle() instanceof AbstractWagon wagon))
             return;
         if(wagon.getControllingPassenger() != minecraft.player)
@@ -114,6 +117,15 @@ public class TWClientEvents {
         int y = graphics.guiHeight() / 2 + 16;
         graphics.drawString(minecraft.font, planks, x - minecraft.font.width(planks) / 2, y, 0xFFFFFF, true);
         graphics.drawString(minecraft.font, iron, x - minecraft.font.width(iron) / 2, y + 10, 0xFFFFFF, true);
+    }
+
+    private static void drawBuildPlan(GuiGraphics graphics, Minecraft minecraft, BaseWagon wagon) {
+        int x = graphics.guiWidth() / 2;
+        int y = graphics.guiHeight() / 2 + 16;
+        for(int i = 0; i < wagon.planSize(); i++) {
+            Component line = Component.translatable("gui.trotting_wagons.build." + wagon.planName(i), wagon.planCount(i), wagon.planRequired(i));
+            graphics.drawString(minecraft.font, line, x - minecraft.font.width(line) / 2, y + i * 10, 0xFFFFFF, true);
+        }
     }
 
     @SubscribeEvent
