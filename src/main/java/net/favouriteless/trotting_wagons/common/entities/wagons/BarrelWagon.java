@@ -165,15 +165,12 @@ public class BarrelWagon extends AbstractWagon implements MenuProvider {
 
 
 
-    /**
-     * One remaining wheel, and a diagonal pair, settle onto the frame.
-     * The shared diagonal correction lifts this body, and a quarter-turn on one wheel leaves it perched.
-     */
+    /** One remaining wheel settles onto the frame. A diagonal pair uses the shared three-point pose. */
     @Override
     public WheelSag wheelSag() {
         int mask = getWheelMask() & 0x0F;
         int count = Integer.bitCount(mask);
-        if(count != 1 && mask != 0b0110 && mask != 0b1001)
+        if(count != 1)
             return super.wheelSag();
         int key = mask;
         for(int slot = 0; slot < WHEEL_COUNT; slot++) {

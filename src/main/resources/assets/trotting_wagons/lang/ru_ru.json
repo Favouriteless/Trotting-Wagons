@@ -41,6 +41,7 @@
   "gui.trotting_wagons.build.blue_dye": "Синий краситель %s/%s",
   "gui.trotting_wagons.build.bed": "Кровать %s/%s",
   "gui.trotting_wagons.build.log": "Брёвна %s/%s",
+  "gui.trotting_wagons.build.brick": "Кирпичи %s/%s",
   "item.trotting_wagons.wheel.durability": "Прочность %s/%s",
   "gui.trotting_wagons.seat.driver": "Возница",
   "gui.trotting_wagons.seat.player": "Пассажир",

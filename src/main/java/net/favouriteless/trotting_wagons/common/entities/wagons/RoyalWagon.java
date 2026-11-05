@@ -139,6 +139,12 @@ public class RoyalWagon extends AbstractInventoryWagon {
         entityData.set(DATA_HARNESS, slots);
     }
 
+    /** Rotated cart skirt. Its lowest corner is 4.0542px. */
+    @Override
+    protected double bareDrop() {
+        return 0.2533850438077787D;
+    }
+
     @Override
     protected AABB makeBoundingBox() {
         return orientedBody(1.438D, 0.0D, 3.312D, 2.266D, 2.424D);

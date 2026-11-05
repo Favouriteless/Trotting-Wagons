@@ -140,6 +140,12 @@ public class PassengerWagon extends AbstractWagon implements MenuProvider {
             updateLanternLight();
     }
 
+    /** Lowest rung of the rope ladder, y=4.5. */
+    @Override
+    protected double bareDrop() {
+        return 4.5D / 16D;
+    }
+
     @Override
     protected AABB makeBoundingBox() {
         return orientedBody(1.625D, 0.0D, 4.198D, 3.312D, 2.266D);

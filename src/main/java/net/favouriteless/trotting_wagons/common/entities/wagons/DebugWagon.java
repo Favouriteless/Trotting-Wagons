@@ -219,6 +219,12 @@ public class DebugWagon extends AbstractInventoryWagon implements GeoBoneHitboxE
             updateLanternLight();
     }
 
+    /** Axle foot at y=6.75. */
+    @Override
+    protected double bareDrop() {
+        return 6.75D / 16D;
+    }
+
     @Override
     protected AABB makeBoundingBox() {
         return orientedBody(1.984D, 0.0D, 4.564D, 2.644D, 1.953D);

@@ -116,6 +116,12 @@ public class ArmoredWagon extends AbstractWagon implements MenuProvider {
         entityData.set(DATA_HARNESS, slots);
     }
 
+    /** Axle foot at y=6. */
+    @Override
+    protected double bareDrop() {
+        return 6D / 16D;
+    }
+
     @Override
     protected AABB makeBoundingBox() {
         return orientedBody(2.279D, 0.0D, 3.479D, 2.094D, 2.391D);

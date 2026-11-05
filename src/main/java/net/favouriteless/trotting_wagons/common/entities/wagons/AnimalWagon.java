@@ -163,6 +163,12 @@ public class AnimalWagon extends AbstractWagon implements MenuProvider {
         setBoundingBox(makeBoundingBox());
     }
 
+    /** Lowest point is the rotated cart step, 5.5398px. */
+    @Override
+    protected double bareDrop() {
+        return 0.34623842746449673D;
+    }
+
     @Override
     protected AABB makeBoundingBox() {
         return orientedBody(1.625D, 0.0D, 3.409D, 2.781D, 2.266D);

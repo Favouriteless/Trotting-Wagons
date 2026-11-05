@@ -1754,6 +1754,9 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         return WheelSet.REGULAR;
     }
 
+    private int settledKey = Integer.MIN_VALUE;
+    private WheelSag settledPose;
+
     public WheelSag wheelSag() {
         boolean fl = wheelOn(0);
         boolean fr = wheelOn(1);
@@ -1761,7 +1764,7 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         boolean rr = wheelOn(3);
         int count = (fl ? 1 : 0) + (fr ? 1 : 0) + (rl ? 1 : 0) + (rr ? 1 : 0);
         if(count == 0)
-            return WheelSag.NONE;
+            return new WheelSag(0, 0, bareDrop());
         if(count >= 3)
             return WheelSag.NONE;
 
@@ -1777,9 +1780,15 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         else if(fl && !fr && rl && !rr)
             roll = WHEEL_SAG;
         else if(!fl && fr && rl && !rr) {
+            WheelSag settled = diagonalSettled(0b0110);
+            if(settled != null)
+                return settled;
             pitch = diagonalPitch();
             roll = WHEEL_SAG;
         } else if(fl && !fr && !rl && rr) {
+            WheelSag settled = diagonalSettled(0b1001);
+            if(settled != null)
+                return settled;
             pitch = diagonalPitch();
             roll = -WHEEL_SAG;
         } else if(fl) {
@@ -1814,12 +1823,32 @@ public abstract class AbstractWagon extends AbstractGeckolibVehicle {
         return 0;
     }
 
+    /**
+     * How far a wheel-less body must drop so its lowest frame point sits on the ground.
+     * Measured from the installed geometry, wheels and harness left out. Most axles bottom at 7px.
+     */
+    protected double bareDrop() {
+        return 7D / 16D;
+    }
+
     protected float missingRearPitch() {
         return -WHEEL_SAG;
     }
 
     protected float diagonalPitch() {
         return -WHEEL_SAG;
+    }
+
+    /** Both diagonal wheels and the empty rear foot on one ground. Null keeps the fixed angle. */
+    private WheelSag diagonalSettled(int mask) {
+        int key = mask;
+        for(int slot = 0; slot < 4; slot++)
+            key |= getWheelKind(slot).ordinal() << (4 + slot * 2);
+        if(key != settledKey) {
+            settledKey = key;
+            settledPose = DiagonalSag.pose(this, mask);
+        }
+        return settledPose;
     }
 
     @Override

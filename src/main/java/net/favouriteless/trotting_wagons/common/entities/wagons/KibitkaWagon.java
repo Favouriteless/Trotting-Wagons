@@ -167,6 +167,8 @@ public class KibitkaWagon extends AbstractInventoryWagon {
     @Override
     public WheelSag wheelSag() {
         int mask = getWheelMask() & 0x0F;
+        if(Integer.bitCount(mask) == 0)
+            return new WheelSag(0, 0, bareDrop());
         int key = mask | ((campPose() & 63) << 4);
         for(int slot = 0; slot < WHEEL_COUNT; slot++) {
             int kind = getWheelKind(slot).ordinal();

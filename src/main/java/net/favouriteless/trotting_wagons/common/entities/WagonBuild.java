@@ -100,7 +100,8 @@ public final class WagonBuild {
                 need("wool", stack -> stack.is(ItemTags.WOOL), 16),
                 need("sticks", stack -> stack.is(TWItems.LONG_STICK.get()), 18),
                 need("lead", stack -> stack.is(Items.LEAD), 1),
-                need("planks", stack -> stack.is(ItemTags.PLANKS), 32));
+                need("planks", stack -> stack.is(ItemTags.PLANKS), 32),
+                need("iron", stack -> stack.is(Items.IRON_INGOT), 8));
     }
 
     public static WagonBuild kibitka() {
@@ -114,7 +115,8 @@ public final class WagonBuild {
                 need("sticks", stack -> stack.is(TWItems.LONG_STICK.get()), 12),
                 need("planks", stack -> stack.is(ItemTags.PLANKS), 40),
                 need("iron", stack -> stack.is(Items.IRON_INGOT), 8),
-                need("wool", stack -> stack.is(ItemTags.WOOL), 4));
+                need("wool", stack -> stack.is(ItemTags.WOOL), 4),
+                need("brick", stack -> stack.is(Items.BRICK), 40));
     }
 
     public static WagonBuild log() {

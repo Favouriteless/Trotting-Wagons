@@ -180,6 +180,12 @@ public class WareWagon extends AbstractWagon implements MenuProvider {
         return entityData.get(DATA_LANTERN);
     }
 
+    /** Ladder foot at y=6. */
+    @Override
+    protected double bareDrop() {
+        return 6D / 16D;
+    }
+
     @Override
     protected AABB makeBoundingBox() {
         return orientedBody(1.625D, 0.0D, 2.981D, 2.062D, 2.078D);

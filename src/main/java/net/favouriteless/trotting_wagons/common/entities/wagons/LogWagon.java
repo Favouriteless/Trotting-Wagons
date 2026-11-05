@@ -146,6 +146,10 @@ public class LogWagon extends AbstractWagon implements MenuProvider {
     @Override
     public WheelSag wheelSag() {
         int mask = getWheelMask() & 0x0F;
+        if(Integer.bitCount(mask) == 0)
+            return new WheelSag(0, 0, bareDrop());
+        if(mask == 0b0110 || mask == 0b1001)
+            return super.wheelSag();
         int key = mask;
         for(int slot = 0; slot < WHEEL_COUNT; slot++) {
             int kind = getWheelKind(slot).ordinal();

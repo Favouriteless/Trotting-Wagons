@@ -81,6 +81,12 @@ public class ConestogaWagon extends AbstractInventoryWagon {
         return slots < 0 ? 0 : Math.min(slots, 2);
     }
 
+    /** Axle foot at y=6. The side hook is drawn from y=-2, already below the wheel plane. */
+    @Override
+    protected double bareDrop() {
+        return 6D / 16D;
+    }
+
     @Override
     protected AABB makeBoundingBox() {
         return orientedBody(1.382D, 0.0D, 2.815D, 2.382D, 2.445D);

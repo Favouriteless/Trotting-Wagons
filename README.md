@@ -26,7 +26,7 @@ Put `trotting-wagons-extended-0.9.2.jar`, GeckoLib, and BoneHitboxLib in the `mo
 
 Craft a long stick from sticks and string, then a chassis from long sticks, sticks, string, and a slimeball. Place the chassis and right-click it with planks and iron ingots. One click adds one item. Sneak adds as many as the stage still needs, up to 16 planks and 4 iron ingots. When both are full, the chassis becomes a wagon base. The chassis does not stop the player. The finished base does, through a BoneHitboxLib hitbox. Break either with an axe to get the chassis item and the materials back.
 
-New wagons are in the **Trotting Wagons Extended** creative tab. The Conestoga, the royal wagon, the armored wagon, the horse whip, and all three wheel types also have crafting recipes. The other wagons do not, yet.
+New wagons are in the **Trotting Wagons Extended** creative tab. The horse whip and all three wheel types also have crafting recipes. The wagons themselves are built from the base.
 
 ## Driving
 

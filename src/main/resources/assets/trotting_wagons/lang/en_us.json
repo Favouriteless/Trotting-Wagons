@@ -48,6 +48,7 @@
   "gui.trotting_wagons.build.blue_dye": "Blue Dye %s/%s",
   "gui.trotting_wagons.build.bed": "Bed %s/%s",
   "gui.trotting_wagons.build.log": "Logs %s/%s",
+  "gui.trotting_wagons.build.brick": "Bricks %s/%s",
   "item.trotting_wagons.wheel.durability": "Durability %s/%s",
   "key.trotting_wagons.hitch": "Hitch Animal",
   "key.categories.trotting_wagons": "Trotting Wagons",

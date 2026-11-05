@@ -114,6 +114,12 @@ public class BigCartWagon extends AbstractInventoryWagon {
             updateLanternLight();
     }
 
+    /** Axle foot at y=6.75. */
+    @Override
+    protected double bareDrop() {
+        return 6.75D / 16D;
+    }
+
     @Override
     protected AABB makeBoundingBox() {
         return orientedBody(2.062D, 0.0D, 2.413D, 2.469D, 1.953D);
